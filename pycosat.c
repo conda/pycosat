@@ -10,14 +10,6 @@
 #endif
 
 #ifdef IS_PY3K
-#include "bytesobject.h"
-#define PyString_FromStringAndSize  PyBytes_FromStringAndSize
-#define PyString_Check  PyBytes_Check
-#define PyString_Size  PyBytes_Size
-#define PyString_AsString  PyBytes_AsString
-#endif
-
-#ifdef IS_PY3K
 #define IS_INT(x)  (PyLong_Check(x))
 #else
 #define IS_INT(x)  (PyInt_Check(x) || PyLong_Check(x))
