@@ -1,8 +1,9 @@
 #include <Python.h>
 
 #include "picosat.h"
+#ifndef DONT_INCLUDE_PICOSAT
 #include "picosat.c"
-
+#endif
 
 #if PY_MAJOR_VERSION >= 3
 #define IS_PY3K
@@ -26,7 +27,7 @@ static PyObject* solve(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "iO|i:verbose", &vars, &x, &verbose))
         return NULL;
 
-    printf("Here\n");
+    printf("Here3\n");
 
     picosat = picosat_init();
     picosat_set_verbosity(picosat, 0);

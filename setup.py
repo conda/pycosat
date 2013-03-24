@@ -1,8 +1,13 @@
 import sys
-if 'develop' in sys.argv:
-    import setuptools
-
 from distutils.core import setup, Extension
+
+
+ext_kwargs = dict(name = "pycosat",
+                  sources = ["pycosat.c"])
+if '--inplace' in sys.argv:
+    ext_kwargs['define_macros'] = [('DONT_INCLUDE_PICOSAT', 1)]
+    ext_kwargs['library_dirs'] = ['.']
+    ext_kwargs['libraries'] = ['picosat']
 
 
 setup(
@@ -21,8 +26,7 @@ setup(
         #"Programming Language :: Python :: 3",
         "Topic :: Utilities",
     ],
-    ext_modules = [Extension(name = "pycosat",
-                             sources = ["pycosat.c"])],
+    ext_modules = [Extension(**ext_kwargs)],
     description = "bindings to picosat",
     long_description = open('README.rst').read(),
 )

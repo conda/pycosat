@@ -13,4 +13,5 @@ test: pycosat.so
 
 
 clean:
-	rm -f picosat.so picosat.o libpicosat.a
+	rm -rf build dist
+	rm -f pycosat.so picosat.o libpicosat.a
