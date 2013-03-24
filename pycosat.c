@@ -84,7 +84,9 @@ static PyObject* solve(PyObject* self, PyObject* args)
     if (verbose >= 2)
         picosat_print(picosat, stdout);
 
+    Py_BEGIN_ALLOW_THREADS  /* release GIL */
     res = picosat_sat(picosat, -1);
+    Py_END_ALLOW_THREADS
 
     switch (res) {
     case PICOSAT_SATISFIABLE:
@@ -99,15 +101,18 @@ static PyObject* solve(PyObject* self, PyObject* args)
                                PyBool_FromLong(val < 0 ? 0 : 1)) < 0)
                 return NULL;
         }
-	break;
+        break;
+
     case PICOSAT_UNSATISFIABLE:
         Py_INCREF(Py_False);
         result = Py_False;
-	break;
+        break;
+
     case PICOSAT_UNKNOWN:
         Py_INCREF(Py_None);
         result = Py_None;
-	break;
+        break;
+
     default:
         PyErr_Format(PyExc_SystemError,
                      "unknown picosat return value: %d", res);
