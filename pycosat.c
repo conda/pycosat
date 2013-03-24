@@ -139,6 +139,8 @@ PyMODINIT_FUNC initpycosat(void)
         return NULL;
 #else
     m = Py_InitModule3("pycosat", module_functions, 0);
+    if (m == NULL)
+        return;
 #endif
 
 #ifdef PYCOSAT_VERSION
