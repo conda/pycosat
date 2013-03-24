@@ -74,8 +74,9 @@ static int add_clauses(PicoSAT *picosat, PyObject *list)
 static PyObject* solve(PyObject* self, PyObject* args)
 {
     PicoSAT *picosat;
-    PyObject *obj;
-    int res, max_idx, i, val, vars, verbose = 0;
+    PyObject *obj, *list;
+    Py_ssize_t max_idx, i;
+    int res, val, vars, verbose = 0;
 
     if (!PyArg_ParseTuple(args, "iO|i:verbose", &vars, &obj, &verbose))
         return NULL;
@@ -87,19 +88,23 @@ static PyObject* solve(PyObject* self, PyObject* args)
     if (add_clauses(picosat, obj) < 0)
         return NULL;
 
-    picosat_print(picosat, stdout);
+    /* picosat_print(picosat, stdout); */
 
     res = picosat_sat(picosat, -1);
 
     printf("res=%d\n", res);
 
     max_idx = picosat_variables(picosat);
+    list = PyList_New(max_idx);
+    if (list == NULL)
+        return NULL;
     for (i = 1; i <= max_idx; i++) {
-        val = picosat_deref (picosat, i);
-        printf("i=%d lit=%d\n", i, val);
+        val = picosat_deref(picosat, i);
+        assert(val == -1 || val == 1);
+        if (PyList_SetItem(list, i - 1, PyBool_FromLong(val < 0 ? 0 : 1)) < 0)
+            return NULL;
     }
-
-    Py_RETURN_NONE;
+    return list;
 }
 
 
