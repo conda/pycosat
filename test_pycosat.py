@@ -23,6 +23,7 @@ tests.append(TestSolver)
 # ------------------------------------------------------------------------
 
 def run(verbosity=1, repeat=1):
+    print("pycosat version: %r" % pycosat.__version__)
     suite = unittest.TestSuite()
     for cls in tests:
         for _ in range(repeat):
