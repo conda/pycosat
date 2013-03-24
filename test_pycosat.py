@@ -8,12 +8,23 @@ tests = []
 class TestSolver(unittest.TestCase):
 
     def test_sat_1(self):
+        """
+        p cnf 5 3
+        1 -5 4 0
+        -1 5 3 4 0
+        -3 -4 0
+        """
         res = pycosat.solve(5, [[1, -5, 4],
                                 [-1, 5, 3, 4],
                                 [-3, -4]])
         self.assertEqual(res, [True, False, False, False, True])
 
     def test_unsat_1(self):
+        """
+        p cnf 2 2
+        -1 0
+        1 0
+        """
         res = pycosat.solve(2, [[-1],
                                 [1]])
         self.assertEqual(res, False)
