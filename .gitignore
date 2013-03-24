@@ -2,5 +2,7 @@
 *.pyc
 *.egg-info
 *.so
+*.o
+*.a
 build/
 dist/
