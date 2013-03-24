@@ -75,7 +75,7 @@ static PyObject* solve(PyObject* self, PyObject* args)
 {
     PicoSAT *picosat;
     PyObject *clauses;          /* list of clauses */
-    PyObject *result;           /* list of return values */
+    PyObject *list;             /* return value if satisfiable */
     Py_ssize_t max_idx, i;
     int res, val, vars, verbose = 0;
 
@@ -90,23 +90,34 @@ static PyObject* solve(PyObject* self, PyObject* args)
         return NULL;
 
     /* picosat_print(picosat, stdout); */
-
     res = picosat_sat(picosat, -1);
 
-    printf("res=%d\n", res);
-
-    max_idx = picosat_variables(picosat);
-    result = PyList_New(max_idx);
-    if (result == NULL)
-        return NULL;
-    for (i = 1; i <= max_idx; i++) {
-        val = picosat_deref(picosat, i);
-        assert(val == -1 || val == 1);
-        if (PyList_SetItem(result, i - 1,
-                           PyBool_FromLong(val < 0 ? 0 : 1)) < 0)
+    switch (res) {
+    case PICOSAT_SATISFIABLE:
+        max_idx = picosat_variables(picosat);
+        list = PyList_New(max_idx);
+        if (list == NULL)
             return NULL;
+        for (i = 1; i <= max_idx; i++) {
+            val = picosat_deref(picosat, i);
+            assert(val == -1 || val == 1);
+            if (PyList_SetItem(list, i - 1,
+                               PyBool_FromLong(val < 0 ? 0 : 1)) < 0)
+                return NULL;
+        }
+        return list;
+
+    case PICOSAT_UNSATISFIABLE:
+        Py_RETURN_FALSE;
+
+    case PICOSAT_UNKNOWN:
+        Py_RETURN_NONE;
+
+    default:
+        PyErr_Format(PyExc_SystemError,
+                     "unknown picosat return value: %d", res);
+        return NULL;
     }
-    return result;
 }
 
 

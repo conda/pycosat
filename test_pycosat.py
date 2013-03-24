@@ -8,3 +8,11 @@ print pycosat.solve(
     ],
 #    True
 )
+
+print pycosat.solve(
+    2, [
+    [-1],
+    [1],
+    ],
+#    True
+)
