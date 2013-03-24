@@ -26,7 +26,7 @@
 
 static int add_clause(PicoSAT *picosat, PyObject *list)
 {
-    PyObject *item;
+    PyObject *lit;     /* the literals are integers */
     Py_ssize_t n, i;
 
     if (!PyList_Check(list)) {
@@ -36,14 +36,14 @@ static int add_clause(PicoSAT *picosat, PyObject *list)
 
     n = PyList_Size(list);
     for (i = 0; i < n; i++) {
-        item = PyList_GetItem(list, i);
-        if (item == NULL)
+        lit = PyList_GetItem(list, i);
+        if (lit == NULL)
             return -1;
-        if (!IS_INT(item))  {
+        if (!IS_INT(lit))  {
             PyErr_SetString(PyExc_TypeError, "interger expected");
             return -1;
         }
-        picosat_add(picosat, PyLong_AsLong(item));
+        picosat_add(picosat, PyLong_AsLong(lit));
     }
     picosat_add(picosat, 0);
     return 0;
@@ -51,7 +51,7 @@ static int add_clause(PicoSAT *picosat, PyObject *list)
 
 static int add_clauses(PicoSAT *picosat, PyObject *list)
 {
-    PyObject *item;
+    PyObject *clause;  /* each clause is a list of intergers */
     Py_ssize_t n, i;
 
     /* printf("HERE>%s<\n", PyString_AS_STRING(PyObject_Repr(iter))); */
@@ -62,10 +62,10 @@ static int add_clauses(PicoSAT *picosat, PyObject *list)
 
     n = PyList_Size(list);
     for (i = 0; i < n; i++) {
-        item = PyList_GetItem(list, i);
-        if (item == NULL)
+        clause = PyList_GetItem(list, i);
+        if (clause == NULL)
             return -1;
-        if (add_clause(picosat, item) < 0)
+        if (add_clause(picosat, clause) < 0)
             return -1;
     }
     return 0;
