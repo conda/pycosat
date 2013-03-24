@@ -17,36 +17,75 @@
 #define PyString_AsString  PyBytes_AsString
 #endif
 
+#ifdef IS_PY3K
+#define IS_INT(x)  (PyLong_Check(x))
+#else
+#define IS_INT(x)  (PyInt_Check(x) || PyLong_Check(x))
+#endif
+
+
+static int add_clause(PicoSAT *picosat, PyObject *list)
+{
+    PyObject *item;
+    Py_ssize_t n, i;
+
+    if (!PyList_Check(list)) {
+        PyErr_SetString(PyExc_TypeError, "list expected");
+        return -1;
+    }
+
+    n = PyList_Size(list);
+    for (i = 0; i < n; i++) {
+        item = PyList_GetItem(list, i);
+        if (item == NULL)
+            return -1;
+        if (!IS_INT(item))  {
+            PyErr_SetString(PyExc_TypeError, "interger expected");
+            return -1;
+        }
+        picosat_add(picosat, PyLong_AsLong(item));
+    }
+    picosat_add(picosat, 0);
+    return 0;
+}
+
+static int add_clauses(PicoSAT *picosat, PyObject *list)
+{
+    PyObject *item;
+    Py_ssize_t n, i;
+
+    /* printf("HERE>%s<\n", PyString_AS_STRING(PyObject_Repr(iter))); */
+    if (!PyList_Check(list)) {
+        PyErr_SetString(PyExc_TypeError, "list expected");
+        return -1;
+    }
+
+    n = PyList_Size(list);
+    for (i = 0; i < n; i++) {
+        item = PyList_GetItem(list, i);
+        if (item == NULL)
+            return -1;
+        if (add_clause(picosat, item) < 0)
+            return -1;
+    }
+    return 0;
+}
 
 static PyObject* solve(PyObject* self, PyObject* args)
 {
     PicoSAT *picosat;
-    PyObject *x;
+    PyObject *obj;
     int res, max_idx, i, val, vars, verbose = 0;
-    
-    if (!PyArg_ParseTuple(args, "iO|i:verbose", &vars, &x, &verbose))
+
+    if (!PyArg_ParseTuple(args, "iO|i:verbose", &vars, &obj, &verbose))
         return NULL;
 
-    printf("Here3\n");
-
     picosat = picosat_init();
-    picosat_set_verbosity(picosat, 0);
+    picosat_set_verbosity(picosat, verbose);
 
-    picosat_adjust(picosat, 5);
-    picosat_add(picosat,  1);
-    picosat_add(picosat, -5);
-    picosat_add(picosat,  4);
-    picosat_add(picosat,  0);
-
-    picosat_add(picosat, -1);
-    picosat_add(picosat,  5);
-    picosat_add(picosat,  3);
-    picosat_add(picosat,  4);
-    picosat_add(picosat,  0);
-
-    picosat_add(picosat, -3);
-    picosat_add(picosat, -4);
-    picosat_add(picosat,  0);
+    picosat_adjust(picosat, vars);
+    if (add_clauses(picosat, obj) < 0)
+        return NULL;
 
     picosat_print(picosat, stdout);
 
