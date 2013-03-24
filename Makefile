@@ -13,5 +13,5 @@ test: pycosat.so
 
 
 clean:
-	rm -rf build dist
+	rm -rf build dist *.egg-info
 	rm -f pycosat.so picosat.o libpicosat.a
