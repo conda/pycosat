@@ -24,19 +24,19 @@
 #endif
 
 
-static int add_clause(PicoSAT *picosat, PyObject *list)
+static int add_clause(PicoSAT *picosat, PyObject *clause)
 {
     PyObject *lit;     /* the literals are integers */
     Py_ssize_t n, i;
 
-    if (!PyList_Check(list)) {
+    if (!PyList_Check(clause)) {
         PyErr_SetString(PyExc_TypeError, "list expected");
         return -1;
     }
 
-    n = PyList_Size(list);
+    n = PyList_Size(clause);
     for (i = 0; i < n; i++) {
-        lit = PyList_GetItem(list, i);
+        lit = PyList_GetItem(clause, i);
         if (lit == NULL)
             return -1;
         if (!IS_INT(lit))  {
@@ -49,23 +49,23 @@ static int add_clause(PicoSAT *picosat, PyObject *list)
     return 0;
 }
 
-static int add_clauses(PicoSAT *picosat, PyObject *list)
+static int add_clauses(PicoSAT *picosat, PyObject *clauses)
 {
-    PyObject *clause;  /* each clause is a list of intergers */
+    PyObject *item;             /* each clause is a list of intergers */
     Py_ssize_t n, i;
 
     /* printf("HERE>%s<\n", PyString_AS_STRING(PyObject_Repr(iter))); */
-    if (!PyList_Check(list)) {
+    if (!PyList_Check(clauses)) {
         PyErr_SetString(PyExc_TypeError, "list expected");
         return -1;
     }
 
-    n = PyList_Size(list);
+    n = PyList_Size(clauses);
     for (i = 0; i < n; i++) {
-        clause = PyList_GetItem(list, i);
-        if (clause == NULL)
+        item = PyList_GetItem(clauses, i);
+        if (item == NULL)
             return -1;
-        if (add_clause(picosat, clause) < 0)
+        if (add_clause(picosat, item) < 0)
             return -1;
     }
     return 0;
@@ -74,18 +74,19 @@ static int add_clauses(PicoSAT *picosat, PyObject *list)
 static PyObject* solve(PyObject* self, PyObject* args)
 {
     PicoSAT *picosat;
-    PyObject *obj, *list;
+    PyObject *clauses;          /* list of clauses */
+    PyObject *result;           /* list of return values */
     Py_ssize_t max_idx, i;
     int res, val, vars, verbose = 0;
 
-    if (!PyArg_ParseTuple(args, "iO|i:verbose", &vars, &obj, &verbose))
+    if (!PyArg_ParseTuple(args, "iO|i:verbose", &vars, &clauses, &verbose))
         return NULL;
 
     picosat = picosat_init();
     picosat_set_verbosity(picosat, verbose);
 
     picosat_adjust(picosat, vars);
-    if (add_clauses(picosat, obj) < 0)
+    if (add_clauses(picosat, clauses) < 0)
         return NULL;
 
     /* picosat_print(picosat, stdout); */
@@ -95,16 +96,17 @@ static PyObject* solve(PyObject* self, PyObject* args)
     printf("res=%d\n", res);
 
     max_idx = picosat_variables(picosat);
-    list = PyList_New(max_idx);
-    if (list == NULL)
+    result = PyList_New(max_idx);
+    if (result == NULL)
         return NULL;
     for (i = 1; i <= max_idx; i++) {
         val = picosat_deref(picosat, i);
         assert(val == -1 || val == 1);
-        if (PyList_SetItem(list, i - 1, PyBool_FromLong(val < 0 ? 0 : 1)) < 0)
+        if (PyList_SetItem(result, i - 1,
+                           PyBool_FromLong(val < 0 ? 0 : 1)) < 0)
             return NULL;
     }
-    return list;
+    return result;
 }
 
 

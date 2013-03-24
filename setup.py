@@ -23,7 +23,7 @@ setup(
         "Operating System :: OS Independent",
         "Programming Language :: C",
         "Programming Language :: Python :: 2",
-        #"Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3",
         "Topic :: Utilities",
     ],
     ext_modules = [Extension(**ext_kwargs)],
