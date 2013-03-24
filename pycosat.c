@@ -89,7 +89,9 @@ static PyObject* solve(PyObject* self, PyObject* args)
     if (add_clauses(picosat, clauses) < 0)
         return NULL;
 
-    /* picosat_print(picosat, stdout); */
+    if (verbose >= 2)
+        picosat_print(picosat, stdout);
+
     res = picosat_sat(picosat, -1);
 
     switch (res) {
