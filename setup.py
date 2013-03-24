@@ -2,17 +2,23 @@ import sys
 from distutils.core import setup, Extension
 
 
-ext_kwargs = dict(name = "pycosat",
-                  sources = ["pycosat.c"])
+version = '0.1.0'
+
+
+ext_kwargs = dict(
+    name = "pycosat",
+    sources = ["pycosat.c"],
+    define_macros = [('PYCOSAT_VERSION', version)],
+)
 if '--inplace' in sys.argv:
-    ext_kwargs['define_macros'] = [('DONT_INCLUDE_PICOSAT', 1)]
+    ext_kwargs['define_macros'].append(('DONT_INCLUDE_PICOSAT', 1))
     ext_kwargs['library_dirs'] = ['.']
     ext_kwargs['libraries'] = ['picosat']
 
 
 setup(
     name = "pycosat",
-    version = "0.1.0",
+    version = version,
     author = "Ilan Schenll",
     author_email = "ilanschnell@gmail.com",
     url = "https://github.com/ilanschnell/pycosat",
