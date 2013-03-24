@@ -126,21 +126,22 @@ static PyMethodDef module_functions[] = {
 static PyModuleDef moduledef = {
     PyModuleDef_HEAD_INIT, "pycosat", 0, -1, module_functions,
 };
-
-PyMODINIT_FUNC
-PyInit_pycosat(void)
+PyMODINIT_FUNC PyInit_pycosat(void)
+#else
+PyMODINIT_FUNC initpycosat(void)
+#endif
 {
     PyObject *m;
 
+#ifdef IS_PY3K
     m = PyModule_Create(&moduledef);
+#else
+    m = Py_InitModule3("pycosat", module_functions, 0);
+#endif
     if (m == NULL)
         return NULL;
+
+#ifdef IS_PY3K
     return m;
-}
-#else
-PyMODINIT_FUNC
-initpycosat(void)
-{
-    Py_InitModule("pycosat", module_functions);
-}
 #endif
+}
