@@ -143,7 +143,7 @@ PyMODINIT_FUNC initpycosat(void)
 
 #ifdef PYCOSAT_VERSION
     PyModule_AddObject(m, "__version__",
-                       PyString_FromString(PYCOSAT_VERSION));
+                       PyUnicode_FromString(PYCOSAT_VERSION));
 #endif
 
 #ifdef IS_PY3K
