@@ -27,6 +27,7 @@ setup(
         "Topic :: Utilities",
     ],
     ext_modules = [Extension(**ext_kwargs)],
+    py_modules = ['test_pycosat'],
     description = "bindings to picosat",
     long_description = open('README.rst').read(),
 )
