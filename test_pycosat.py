@@ -13,7 +13,7 @@ class TestSolver(unittest.TestCase):
                                 [-3, -4]])
         self.assertEqual(res, [True, False, False, False, True])
 
-    def test_unsat_2(self):
+    def test_unsat_1(self):
         res = pycosat.solve(2, [[-1],
                                 [1]])
         self.assertEqual(res, False)
