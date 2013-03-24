@@ -2,7 +2,7 @@ import sys
 from distutils.core import setup, Extension
 
 
-version = '0.1.0'
+version = '0.1.1'
 
 
 ext_kwargs = dict(
@@ -19,7 +19,7 @@ if '--inplace' in sys.argv:
 setup(
     name = "pycosat",
     version = version,
-    author = "Ilan Schenll",
+    author = "Ilan Schnell",
     author_email = "ilanschnell@gmail.com",
     url = "https://github.com/ilanschnell/pycosat",
     license = "MIT",
