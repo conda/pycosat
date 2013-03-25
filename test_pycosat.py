@@ -72,13 +72,16 @@ def run(verbosity=1, repeat=1):
 
 
 if __name__ == '__main__':
-    if 1:
+    import sys
+    if len(sys.argv) == 1:
         run()
     else:
-        from glob import glob
-        for path in glob('/Users/ilan/src/SATLIB/*.cnf'):
-            print path
+        for path in sys.argv[1:]:
+            print(path)
             n_vars, clauses = read_cnf(path)
             sol = pycosat.solve(n_vars, clauses)
-            print sol
-            assert verify(n_vars, clauses, sol)
+            if isinstance(sol, list):
+                print("SAT n_vars=%d" % n_vars)
+                assert verify(n_vars, clauses, sol)
+            else:
+                print("XXX n_vars=%d res=%s" % (n_vars, sol))
