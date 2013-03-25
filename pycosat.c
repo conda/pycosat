@@ -5,6 +5,10 @@
 #include "picosat.c"
 #endif
 
+/* when defined, picosat uses the Python memory manager */
+#define WITH_PYMEM
+
+
 #if PY_MAJOR_VERSION >= 3
 #define IS_PY3K
 #endif
@@ -13,6 +17,19 @@
 #define IS_INT(x)  (PyLong_Check(x))
 #else
 #define IS_INT(x)  (PyInt_Check(x) || PyLong_Check(x))
+#endif
+
+
+#ifdef WITH_PYMEM
+static void *py_malloc(void *mmgr, size_t bytes) {
+    return PyMem_Malloc(bytes);
+}
+static void *py_realloc(void *mmgr, void *ptr, size_t old, size_t new) {
+    return PyMem_Realloc(ptr, new);
+}
+static void py_free(void *mmgr, void *ptr, size_t bytes) {
+    PyMem_Free(ptr);
+}
 #endif
 
 
@@ -74,7 +91,11 @@ static PyObject* solve(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "iO|i:verbose", &vars, &clauses, &verbose))
         return NULL;
 
+#ifdef WITH_PYMEM
+    picosat = picosat_minit(NULL, py_malloc, py_realloc, py_free);
+#else
     picosat = picosat_init();
+#endif
     picosat_set_verbosity(picosat, verbose);
 
     picosat_adjust(picosat, vars);
