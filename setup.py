@@ -8,8 +8,11 @@ version = '0.1.1'
 ext_kwargs = dict(
     name = "pycosat",
     sources = ["pycosat.c"],
-    define_macros = [('PYCOSAT_VERSION', '"%s"' % version)],
+    define_macros = []
 )
+if sys.platform != 'win32':
+    ext_kwargs['define_macros'].append((
+            'PYCOSAT_VERSION', '"%s"' % version))
 if '--inplace' in sys.argv:
     ext_kwargs['define_macros'].append(('DONT_INCLUDE_PICOSAT', 1))
     ext_kwargs['library_dirs'] = ['.']
