@@ -2,7 +2,7 @@
 
 #ifdef _MSC_VER
 #define NGETRUSAGE
-#define incline __inline
+#define inline __inline
 #endif
 
 #include "picosat.h"
