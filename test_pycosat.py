@@ -16,6 +16,8 @@ def read_cnf(path):
             assert parts[1] == 'cnf'
             n_vars, n_clauses = [int(n) for n in parts[2:4]]
             continue
+        if parts[0] == '%':
+            break
         assert parts[-1] == '0'
         clauses.append([int(lit) for lit in parts[:-1]])
     assert len(clauses) == n_clauses
@@ -70,11 +72,13 @@ def run(verbosity=1, repeat=1):
 
 
 if __name__ == '__main__':
-    run()
-    n_vars, clauses = read_cnf('uf20-0801.cnf')
-    #n_vars, clauses = (5, [[1, -5, 4],
-    #                       [-1, 5, 3, 4],
-    #                       [-3, -4]])
-    #sol = pycosat.solve(n_vars, clauses)
-    #print sol
-    #print verify(n_vars, clauses, sol)
+    if 1:
+        run()
+    else:
+        from glob import glob
+        for path in glob('/Users/ilan/src/SATLIB/*.cnf'):
+            print path
+            n_vars, clauses = read_cnf(path)
+            sol = pycosat.solve(n_vars, clauses)
+            print sol
+            assert verify(n_vars, clauses, sol)
