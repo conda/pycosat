@@ -1,0 +1,9 @@
+For 0.2.0 release:
+------------------
+  * fix MSVC compiler problems
+  * more tests
+
+
+Notes:
+------
+http://www.cs.ubc.ca/~hoos/SATLIB/benchm.html

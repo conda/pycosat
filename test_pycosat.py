@@ -2,8 +2,7 @@ import unittest
 
 import pycosat
 
-
-tests = []
+# -------------------------- utility functions ---------------------------
 
 def read_cnf(path):
     clauses = []
@@ -31,6 +30,9 @@ def verify(n_vars, clauses, sol):
     return all(any(sol_vars[abs(i)] ^ bool(i < 0) for i in clause)
                for clause in clauses)
 
+# -------------------------- actual unit tests ---------------------------
+
+tests = []
 
 class TestSolver(unittest.TestCase):
 
