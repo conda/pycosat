@@ -22,6 +22,14 @@ def read_cnf(path):
     return n_vars, clauses
 
 
+def verify(n_vars, clauses, sol):
+    sol_vars = {} # variable number -> bool
+    for i in sol:
+        sol_vars[abs(i)] = bool(i > 0)
+    return all(any(sol_vars[abs(i)] ^ bool(i < 0) for i in clause)
+               for clause in clauses)
+
+
 class TestSolver(unittest.TestCase):
 
     def test_sat_1(self):
@@ -63,4 +71,10 @@ def run(verbosity=1, repeat=1):
 
 if __name__ == '__main__':
     run()
-    #print pycosat.solve(*read_cnf('uf20-0801.cnf'))
+    n_vars, clauses = read_cnf('uf20-0801.cnf')
+    #n_vars, clauses = (5, [[1, -5, 4],
+    #                       [-1, 5, 3, 4],
+    #                       [-3, -4]])
+    #sol = pycosat.solve(n_vars, clauses)
+    #print sol
+    #print verify(n_vars, clauses, sol)
