@@ -5,6 +5,23 @@ import pycosat
 
 tests = []
 
+def read_cnf(path):
+    clauses = []
+    for line in open(path):
+        parts = line.split()
+        if not parts or parts[0] == 'c':
+            continue
+        if parts[0] == 'p':
+            assert len(parts) == 4
+            assert parts[1] == 'cnf'
+            n_vars, n_clauses = [int(n) for n in parts[2:4]]
+            continue
+        assert parts[-1] == '0'
+        clauses.append([int(lit) for lit in parts[:-1]])
+    assert len(clauses) == n_clauses
+    return n_vars, clauses
+
+
 class TestSolver(unittest.TestCase):
 
     def test_sat_1(self):
@@ -17,7 +34,7 @@ class TestSolver(unittest.TestCase):
         res = pycosat.solve(5, [[1, -5, 4],
                                 [-1, 5, 3, 4],
                                 [-3, -4]])
-        self.assertEqual(res, [True, False, False, False, True])
+        self.assertEqual(res, [1, -2, -3, -4, 5])
 
     def test_unsat_1(self):
         """
@@ -46,3 +63,4 @@ def run(verbosity=1, repeat=1):
 
 if __name__ == '__main__':
     run()
+    #print pycosat.solve(*read_cnf('uf20-0801.cnf'))

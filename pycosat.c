@@ -14,6 +14,7 @@
 #endif
 
 #ifdef IS_PY3K
+#define PyInt_FromLong  PyLong_FromLong
 #define IS_INT(x)  (PyLong_Check(x))
 #else
 #define IS_INT(x)  (PyInt_Check(x) || PyLong_Check(x))
@@ -118,8 +119,7 @@ static PyObject* solve(PyObject* self, PyObject* args)
         for (i = 1; i <= max_idx; i++) {
             val = picosat_deref(picosat, i);
             assert(val == -1 || val == 1);
-            if (PyList_SetItem(result, i - 1,
-                               PyBool_FromLong(val < 0 ? 0 : 1)) < 0)
+            if (PyList_SetItem(result, i - 1, PyInt_FromLong(val * i)))
                 return NULL;
         }
         break;
