@@ -56,7 +56,7 @@ class TestSolver(unittest.TestCase):
         """
         res = pycosat.solve(2, [[-1],
                                 [1]])
-        self.assertEqual(res, False)
+        self.assertEqual(res, "UNSAT")
 
 tests.append(TestSolver)
 
@@ -94,5 +94,5 @@ if __name__ == '__main__':
                 sys.stdout.write("SAT\n")
                 assert verify(n_vars, clauses, sol)
             else:
-                sys.stdout.write("UNSAT: %s\n" % sol)
+                sys.stdout.write("%s\n" % sol)
             sys.stdout.flush()

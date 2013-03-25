@@ -125,13 +125,11 @@ static PyObject* solve(PyObject* self, PyObject* args)
         break;
 
     case PICOSAT_UNSATISFIABLE:
-        Py_INCREF(Py_False);
-        result = Py_False;
+        result = PyUnicode_FromString("UNSAT");
         break;
 
     case PICOSAT_UNKNOWN:
-        Py_INCREF(Py_None);
-        result = Py_None;
+        result = PyUnicode_FromString("UNKNOWN");
         break;
 
     default:
