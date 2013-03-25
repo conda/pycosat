@@ -94,5 +94,5 @@ if __name__ == '__main__':
                 sys.stdout.write("SAT\n")
                 assert verify(n_vars, clauses, sol)
             else:
-                print("UNSAT: %s\n" % sol)
+                sys.stdout.write("UNSAT: %s\n" % sol)
             sys.stdout.flush()
