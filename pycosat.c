@@ -85,7 +85,7 @@ static PyObject* solve(PyObject* self, PyObject* args)
 {
     PicoSAT *picosat;
     PyObject *clauses;          /* list of clauses */
-    PyObject *result;           /* return value */
+    PyObject *result = NULL;    /* return value */
     Py_ssize_t max_idx, i;
     int res, val, vars, verbose = 0;
 
@@ -107,7 +107,7 @@ static PyObject* solve(PyObject* self, PyObject* args)
         picosat_print(picosat, stdout);
 
     Py_BEGIN_ALLOW_THREADS  /* release GIL */
-    res = picosat_sat(picosat, -1);
+        res = picosat_sat(picosat, -1);
     Py_END_ALLOW_THREADS
 
     switch (res) {
@@ -117,9 +117,9 @@ static PyObject* solve(PyObject* self, PyObject* args)
         if (result == NULL)
             return NULL;
         for (i = 1; i <= max_idx; i++) {
-            val = picosat_deref(picosat, i);
+            val = picosat_deref(picosat, (int) i);
             assert(val == -1 || val == 1);
-            if (PyList_SetItem(result, i - 1, PyInt_FromLong(val * i)))
+            if (PyList_SetItem(result, i - 1, PyInt_FromLong((long) val * i)))
                 return NULL;
         }
         break;
