@@ -75,15 +75,24 @@ def run(verbosity=1, repeat=1):
 
 if __name__ == '__main__':
     import sys
+    from os.path import basename
+
     if len(sys.argv) == 1:
         run()
     else:
         for path in sys.argv[1:]:
-            print(path)
+            sys.stdout.write('%30s:  ' % basename(path))
+            sys.stdout.flush()
+
             n_vars, clauses = read_cnf(path)
+            sys.stdout.write('vars: %6d   cls: %6d   ' %
+                             (n_vars, len(clauses)))
+            sys.stdout.flush()
+
             sol = pycosat.solve(n_vars, clauses)
             if isinstance(sol, list):
-                print("SAT n_vars=%d" % n_vars)
+                sys.stdout.write("SAT\n")
                 assert verify(n_vars, clauses, sol)
             else:
-                print("XXX n_vars=%d res=%s" % (n_vars, sol))
+                print("UNSAT: %s\n" % sol)
+            sys.stdout.flush()
