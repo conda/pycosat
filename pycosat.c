@@ -1,5 +1,10 @@
 #include <Python.h>
 
+#ifdef _MSC_VER
+#define NGETRUSAGE
+#define incline __inline
+#endif
+
 #include "picosat.h"
 #ifndef DONT_INCLUDE_PICOSAT
 #include "picosat.c"
