@@ -70,6 +70,14 @@ class TestSolver(unittest.TestCase):
             #sys.stderr.write('%r\n' % repr(sol))
             self.assertTrue(verify(5, clauses, sol))
 
+    def test_itersolve(self):
+        clauses = [[1, -5, 4],
+                   [-1, 5, 3, 4],
+                   [-3, -4]]
+        for sol in pycosat.itersolve(5, clauses):
+            sys.stderr.write('%r\n' % repr(sol))
+            self.assertTrue(verify(5, clauses, sol))
+
     def test_unsat_1(self):
         """
         p cnf 2 2
@@ -113,11 +121,10 @@ if __name__ == '__main__':
             sys.stdout.write('vars: %6d   cls: %6d   ' %
                              (n_vars, len(clauses)))
             sys.stdout.flush()
-
-            sol = pycosat.solve(n_vars, clauses)
-            if isinstance(sol, list):
-                sys.stdout.write("SAT\n")
+            sol = '-UNSAT-'
+            for sol in pycosat.itersolve(n_vars, clauses):
+                sys.stdout.write('.')
+                sys.stdout.flush()
                 assert verify(n_vars, clauses, sol)
-            else:
-                sys.stdout.write("%s\n" % sol)
+            sys.stdout.write("%s\n" % sol)
             sys.stdout.flush()

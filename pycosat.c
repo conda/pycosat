@@ -250,10 +250,136 @@ static PyObject* solve(PyObject* self, PyObject* args)
     return result;
 }
 
+/*********************** Solution Iterator *********************/
+
+typedef struct {
+    PyObject_HEAD
+    PicoSAT *picosat;
+} soliterobject;
+
+static PyTypeObject SolIter_Type;
+
+#define SolIter_Check(op)  PyObject_TypeCheck(op, &SolIter_Type)
+
+static PyObject* itersolve(PyObject* self, PyObject *args)
+{
+    PyObject *clauses;          /* list of clauses */
+    int vars, sols = 0;
+    soliterobject *it;          /* iterator to be returned */
+
+    if (!PyArg_ParseTuple(args, "iO|i", &vars, &clauses, &sols))
+        return NULL;
+
+    it = PyObject_GC_New(soliterobject, &SolIter_Type);
+    if (it == NULL)
+        return NULL;
+
+#ifdef WITH_PYMEM
+    it->picosat = picosat_minit(NULL, py_malloc, py_realloc, py_free);
+#else
+    it->picosat = picosat_init();
+#endif
+
+    picosat_adjust(it->picosat, vars);
+    if (add_clauses(it->picosat, clauses) < 0) {
+        picosat_reset(it->picosat);
+        return NULL;
+    }
+
+    PyObject_GC_Track(it);
+    return (PyObject *) it;
+}
+
+static PyObject* soliter_next(soliterobject *it)
+{
+    PyObject *new = NULL;       /* one of the solutions */
+    int res, max_idx;
+    char *mem = NULL;
+
+    assert(SolIter_Check(it));
+
+    Py_BEGIN_ALLOW_THREADS      /* release GIL */
+    res = picosat_sat(it->picosat, -1);
+    Py_END_ALLOW_THREADS
+
+    if (res == PICOSAT_SATISFIABLE) {
+        max_idx = picosat_variables(it->picosat);
+        if (!mem) { /* Temporary storage */
+            mem = calloc(max_idx+1, 1);
+        }
+        new = PyList_New(max_idx);
+        if (new == NULL) {
+            /* raise */
+            return NULL;
+        }
+        /* Move solution to the list and to constraints
+           so that next solution will be generated */
+        add_solution(it->picosat, new, mem, max_idx);
+        return new;
+    }
+    else {                   /* no more positions -- stop iteration */
+        return NULL;
+    }
+}
+
+static void
+soliter_dealloc(soliterobject *it)
+{
+    PyObject_GC_UnTrack(it);
+    picosat_reset(it->picosat);
+    PyObject_GC_Del(it);
+}
+
+static int
+soliter_traverse(soliterobject *it, visitproc visit, void *arg)
+{
+    Py_VISIT(it->picosat);
+    return 0;
+}
+
+static PyTypeObject SolIter_Type = {
+#ifdef IS_PY3K
+    PyVarObject_HEAD_INIT(&SolIter_Type, 0)
+#else
+    PyObject_HEAD_INIT(NULL)
+    0,                                        /* ob_size */
+#endif
+    "soliterator",                            /* tp_name */
+    sizeof(soliterobject),                    /* tp_basicsize */
+    0,                                        /* tp_itemsize */
+    /* methods */
+    (destructor) soliter_dealloc,             /* tp_dealloc */
+    0,                                        /* tp_print */
+    0,                                        /* tp_getattr */
+    0,                                        /* tp_setattr */
+    0,                                        /* tp_compare */
+    0,                                        /* tp_repr */
+    0,                                        /* tp_as_number */
+    0,                                        /* tp_as_sequence */
+    0,                                        /* tp_as_mapping */
+    0,                                        /* tp_hash */
+    0,                                        /* tp_call */
+    0,                                        /* tp_str */
+    PyObject_GenericGetAttr,                  /* tp_getattro */
+    0,                                        /* tp_setattro */
+    0,                                        /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT | Py_TPFLAGS_HAVE_GC,  /* tp_flags */
+    0,                                        /* tp_doc */
+    (traverseproc) soliter_traverse,          /* tp_traverse */
+    0,                                        /* tp_clear */
+    0,                                        /* tp_richcompare */
+    0,                                        /* tp_weaklistoffset */
+    PyObject_SelfIter,                        /* tp_iter */
+    (iternextfunc) soliter_next,              /* tp_iternext */
+    0,                                        /* tp_methods */
+};
+
+/*************************** Method definitions *************************/
 
 /* declaration of methods supported by this module */
 static PyMethodDef module_functions[] = {
     {"solve", (PyCFunction) solve, METH_VARARGS},
+    {"itersolve", (PyCFunction) itersolve, METH_VARARGS},
     {"solveall", (PyCFunction) solve_all, METH_VARARGS},
     {NULL,    NULL}  /* sentinel */
 };
