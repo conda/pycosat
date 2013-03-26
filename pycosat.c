@@ -58,7 +58,7 @@ static int add_clause(PicoSAT *picosat, PyObject *clause)
             PyErr_SetString(PyExc_TypeError, "interger expected");
             return -1;
         }
-        picosat_add(picosat, PyLong_AsLong(lit));
+        picosat_add(picosat, (int) PyLong_AsLong(lit));
     }
     picosat_add(picosat, 0);
     return 0;
