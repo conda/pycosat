@@ -45,7 +45,7 @@ add_solution(PicoSAT *picosat, char *mem)
 
     max_idx = picosat_variables(picosat);
     if (!mem) {
-        mem = malloc(max_idx + 1);
+        mem = PyMem_Malloc(max_idx + 1);
         memset(mem, 0, max_idx + 1);
     }
 
@@ -55,7 +55,7 @@ add_solution(PicoSAT *picosat, char *mem)
     for (i = 1; i <= max_idx; i++)
         picosat_add(picosat, (mem[i] < 0) ? i : -i);
 
-    picosat_add (picosat, 0);
+    picosat_add(picosat, 0);
 }
 
 static int add_clause(PicoSAT *picosat, PyObject *clause)
@@ -328,6 +328,8 @@ static void
 soliter_dealloc(soliterobject *it)
 {
     PyObject_GC_UnTrack(it);
+    if (it->mem)
+        PyMem_Free(it->mem);
     picosat_reset(it->picosat);
     PyObject_GC_Del(it);
 }
