@@ -48,6 +48,16 @@ class TestSolver(unittest.TestCase):
                                 [-3, -4]])
         self.assertEqual(res, [1, -2, -3, -4, 5])
 
+    def test_sat_all_1(self):
+        clauses = [[1, -5, 4],
+                   [-1, 5, 3, 4],
+                   [-3, -4]]
+        res = pycosat.solveall(5, clauses)
+        self.assertEqual(len(res), 18)
+        self.assertEqual(len(set(tuple(sol) for sol in res)), 18)
+        for sol in res:
+            verify(5, clauses, sol)
+
     def test_unsat_1(self):
         """
         p cnf 2 2

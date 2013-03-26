@@ -155,7 +155,7 @@ static PyObject* solve_all(PyObject *self, PyObject *args)
             result = NULL;
             goto final;
         }
-        /* Move solution to the list and to constraints 
+        /* Move solution to the list and to constraints
            so that next solution will be generated */
         add_solution(picosat, new, mem, max_idx);
         Py_DECREF(new);
