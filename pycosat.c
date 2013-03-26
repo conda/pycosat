@@ -134,15 +134,15 @@ static PyObject* solve(PyObject* self, PyObject* args)
     PicoSAT *picosat;
     PyObject *clauses;          /* list of clauses */
     PyObject *result = NULL;    /* return value */
-    int res, vars, verbose = 0;
+    int res, vars = -1, verbose = 0;
 
-    if (!PyArg_ParseTuple(args, "iO|i:solve", &vars, &clauses, &verbose))
+    if (!PyArg_ParseTuple(args, "O|ii:solve", &clauses, &vars, &verbose))
         return NULL;
 
     picosat = picosat_minit(NULL, py_malloc, py_realloc, py_free);
     picosat_set_verbosity(picosat, verbose);
-
-    picosat_adjust(picosat, vars);
+    if (vars != -1)
+        picosat_adjust(picosat, vars);
     if (add_clauses(picosat, clauses) < 0) {
         picosat_reset(picosat);
         return NULL;
@@ -193,9 +193,9 @@ static PyObject* itersolve(PyObject* self, PyObject *args)
 {
     PyObject *clauses;          /* list of clauses */
     soliterobject *it;          /* iterator to be returned */
-    int vars;
+    int vars = -1, verbose = 0;
 
-    if (!PyArg_ParseTuple(args, "iO", &vars, &clauses))
+    if (!PyArg_ParseTuple(args, "O|ii:itersolve", &clauses, &vars, &verbose))
         return NULL;
 
     it = PyObject_GC_New(soliterobject, &SolIter_Type);
@@ -203,7 +203,9 @@ static PyObject* itersolve(PyObject* self, PyObject *args)
         return NULL;
 
     it->picosat = picosat_minit(NULL, py_malloc, py_realloc, py_free);
-    picosat_adjust(it->picosat, vars);
+    picosat_set_verbosity(it->picosat, verbose);
+    if (vars != -1)
+        picosat_adjust(it->picosat, vars);
     if (add_clauses(it->picosat, clauses) < 0) {
         picosat_reset(it->picosat);
         return NULL;

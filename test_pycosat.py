@@ -21,18 +21,18 @@ def read_cnf(path):
         assert parts[-1] == '0'
         clauses.append([int(lit) for lit in parts[:-1]])
     assert len(clauses) == n_clauses
-    return n_vars, clauses
+    return clauses, n_vars
 
-def verify(n_vars, clauses, sol):
+def verify(clauses, n_vars, sol):
     sol_vars = {} # variable number -> bool
     for i in sol:
         sol_vars[abs(i)] = bool(i > 0)
     return all(any(sol_vars[abs(i)] ^ bool(i < 0) for i in clause)
                for clause in clauses)
 
-def py_itersolve(n_vars, clauses):
+def py_itersolve(clauses, n_vars):
     while True:
-        sol = pycosat.solve(n_vars, clauses)
+        sol = pycosat.solve(clauses, n_vars)
         if isinstance(sol, list):
             yield sol
             clauses.append([-x for x in sol])
@@ -59,18 +59,18 @@ tests = []
 class TestSolve(unittest.TestCase):
 
     def test_wrong_args(self):
-        self.assertRaises(TypeError, solve, 'A', [[1, 2], [3, 4]])
-        self.assertRaises(TypeError, solve, 3, {})
-        self.assertRaises(TypeError, solve, 5, ['a'])
-        self.assertRaises(TypeError, solve, 5, [[1, 2], [3, None]])
-        self.assertRaises(ValueError, solve, 5, [[1, 2], [3, 0]])
+        self.assertRaises(TypeError, solve, [[1, 2], [-3]], 'A')
+        self.assertRaises(TypeError, solve, {})
+        self.assertRaises(TypeError, solve, ['a'])
+        self.assertRaises(TypeError, solve, [[1, 2], [3, None]], 5)
+        self.assertRaises(ValueError, solve, [[1, 2], [3, 0]])
 
     def test_cnf1(self):
-        res = solve(nvars1, clauses1)
+        res = solve(clauses1)
         self.assertEqual(res, [1, -2, -3, -4, 5])
 
     def test_cnf2(self):
-        res = solve(nvars2, clauses2)
+        res = solve(clauses2)
         self.assertEqual(res, "UNSAT")
 
 tests.append(TestSolve)
@@ -80,17 +80,17 @@ tests.append(TestSolve)
 class TestIterSolve(unittest.TestCase):
 
     def test_cnf1(self):
-        for sol in itersolve(nvars1, clauses1):
+        for sol in itersolve(clauses1, nvars1):
             #sys.stderr.write('%r\n' % repr(sol))
-            self.assertTrue(verify(nvars1, clauses1, sol))
+            self.assertTrue(verify(clauses1, nvars1, sol))
 
-        sols = list(itersolve(nvars1, clauses1))
+        sols = list(itersolve(clauses1, nvars1))
         self.assertEqual(len(sols), 18)
         # ensure solutions are unique
         self.assertEqual(len(set(tuple(sol) for sol in sols)), 18)
 
     def test_cnf2(self):
-        sols = list(itersolve(nvars2, clauses2))
+        sols = list(itersolve(clauses2, nvars2))
         self.assertEqual(sols, [])
 
 tests.append(TestIterSolve)
@@ -127,10 +127,10 @@ if __name__ == '__main__':
                              (n_vars, len(clauses)))
             sys.stdout.flush()
             n_sol = 0
-            for sol in itersolve(n_vars, clauses):
+            for sol in itersolve(clauses, n_vars):
                 sys.stdout.write('.')
                 sys.stdout.flush()
-                assert verify(n_vars, clauses, sol)
+                assert verify(clauses, n_vars, sol)
                 n_sol += 1
             sys.stdout.write("%d\n" % n_sol)
             sys.stdout.flush()
