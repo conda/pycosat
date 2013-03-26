@@ -40,44 +40,41 @@ def solveall(n_vars, clauses):
         else:
             return
 
+# -------------------------- test clauses --------------------------------
+
+# p cnf 5 3
+# 1 -5 4 0
+# -1 5 3 4 0
+# -3 -4 0
+nvars1, clauses1 = 5, [[1, -5, 4], [-1, 5, 3, 4], [-3, -4]]
+
+# p cnf 2 2
+# -1 0
+# 1 0
+nvars2, clauses2 = 2, [[-1], [1]]
+
 # -------------------------- actual unit tests ---------------------------
 
 tests = []
 
 class TestSolver(unittest.TestCase):
 
-    def test_sat_1(self):
-        """
-        p cnf 5 3
-        1 -5 4 0
-        -1 5 3 4 0
-        -3 -4 0
-        """
-        res = pycosat.solve(5, [[1, -5, 4],
-                                [-1, 5, 3, 4],
-                                [-3, -4]])
+    def test_solve_1(self):
+        res = pycosat.solve(nvars1, clauses1)
         self.assertEqual(res, [1, -2, -3, -4, 5])
 
-    def test_itersolve(self):
-        clauses = [[1, -5, 4],
-                   [-1, 5, 3, 4],
-                   [-3, -4]]
-        for sol in pycosat.itersolve(5, clauses):
+    def test_itersolve_1(self):
+        for sol in pycosat.itersolve(nvars1, clauses1):
             #sys.stderr.write('%r\n' % repr(sol))
-            self.assertTrue(verify(5, clauses, sol))
+            self.assertTrue(verify(nvars1, clauses1, sol))
 
-        sols = list(pycosat.itersolve(5, clauses))
+        sols = list(pycosat.itersolve(nvars1, clauses1))
         self.assertEqual(len(sols), 18)
+        # ensure solutions are unique
         self.assertEqual(len(set(tuple(sol) for sol in sols)), 18)
 
-    def test_unsat_1(self):
-        """
-        p cnf 2 2
-        -1 0
-        1 0
-        """
-        res = pycosat.solve(2, [[-1],
-                                [1]])
+    def test_solve_2(self):
+        res = pycosat.solve(nvars2, clauses2)
         self.assertEqual(res, "UNSAT")
 
 tests.append(TestSolver)

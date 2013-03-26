@@ -1,3 +1,8 @@
+2013-03-XX   0.3.0:
+-------------------
+  * add solution iterator
+
+
 2013-03-25   0.2.0:
 -------------------
   * fixed MSVC compiler problems
