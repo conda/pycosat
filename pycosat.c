@@ -130,7 +130,7 @@ static PicoSAT* setup_picosat(PyObject* args)
     return picosat;
 }
 
-static PyObject* mklist(PicoSAT *picosat)
+static PyObject* get_solution(PicoSAT *picosat)
 {
     PyObject *list;
     int max_idx, i, val;
@@ -170,7 +170,7 @@ static PyObject* solve(PyObject* self, PyObject* args)
 
     switch (res) {
     case PICOSAT_SATISFIABLE:
-        result = mklist(picosat);
+        result = get_solution(picosat);
         break;
 
     case PICOSAT_UNSATISFIABLE:
@@ -231,7 +231,7 @@ static PyObject* soliter_next(soliterobject *it)
     Py_END_ALLOW_THREADS
 
     if (res == PICOSAT_SATISFIABLE) {
-        list = mklist(it->picosat);
+        list = get_solution(it->picosat);
         if (list == NULL) {
             PyErr_SetString(PyExc_SystemError, "failed to create list");
             return NULL;
