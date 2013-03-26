@@ -123,8 +123,8 @@ static PyObject* solve(PyObject* self, PyObject* args)
         for (i = 1; i <= max_idx; i++) {
             val = picosat_deref(picosat, i);
             assert(val == -1 || val == 1);
-            if (PyList_SetItem(result, (Py_ssize_t) (i - 1),
-                               PyInt_FromLong((long) (val * i))))
+            if (PyList_SetItem(result, (Py_ssize_t) i - 1,
+                               PyInt_FromLong((long) val * i)) < 0)
                 return NULL;
         }
         break;
