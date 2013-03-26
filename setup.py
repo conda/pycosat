@@ -22,7 +22,7 @@ setup(
     name = "pycosat",
     version = version,
     author = "Ilan Schnell",
-    author_email = "ilanschnell@gmail.com",
+    author_email = "ilan@continuum.io",
     url = "https://github.com/ContinuumIO/pycosat",
     license = "MIT",
     classifiers = [
