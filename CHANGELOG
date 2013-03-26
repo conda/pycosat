@@ -1,6 +1,7 @@
-2013-03-XX   0.3.0:
+2013-03-26   0.3.0:
 -------------------
-  * add solution iterator
+  * add solution iterator (pycosat.itersolve)
+  * make number of variables optional argument
 
 
 2013-03-25   0.2.0:
