@@ -1,3 +1,4 @@
+import copy
 import unittest
 
 import pycosat
@@ -30,6 +31,16 @@ def verify(n_vars, clauses, sol):
     return all(any(sol_vars[abs(i)] ^ bool(i < 0) for i in clause)
                for clause in clauses)
 
+
+def solveall(n_vars, clauses):
+    while True:
+        sol = pycosat.solve(n_vars, clauses)
+        if isinstance(sol, list):
+            yield sol
+            clauses.append([-x for x in sol])
+        else:
+            return
+
 # -------------------------- actual unit tests ---------------------------
 
 tests = []
@@ -52,11 +63,11 @@ class TestSolver(unittest.TestCase):
         clauses = [[1, -5, 4],
                    [-1, 5, 3, 4],
                    [-3, -4]]
-        res = pycosat.solveall(5, clauses)
+        res = list(solveall(5, copy.deepcopy(clauses)))
         self.assertEqual(len(res), 18)
         self.assertEqual(len(set(tuple(sol) for sol in res)), 18)
         for sol in res:
-            sys.stderr.write('%r\n' % repr(sol))
+            #sys.stderr.write('%r\n' % repr(sol))
             self.assertTrue(verify(5, clauses, sol))
 
     def test_unsat_1(self):
