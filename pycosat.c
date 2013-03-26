@@ -40,10 +40,8 @@ static void blocksol(PicoSAT *picosat, char *mem)
     int max_idx, i;
 
     max_idx = picosat_variables(picosat);
-    if (!mem) {
+    if (!mem)
         mem = PyMem_Malloc(max_idx + 1);
-        memset(mem, 0, max_idx + 1);
-    }
 
     for (i = 1; i <= max_idx; i++)
         mem[i] = (picosat_deref (picosat, i) > 0) ? 1 : -1;
@@ -227,12 +225,18 @@ static PyObject* soliter_next(soliterobject *it)
             PyErr_SetString(PyExc_SystemError, "failed to create list");
             return NULL;
         }
-        /* move solution to the list and to constraints
-           so that next solution will be generated */
+        /* add inverse solution to the clauses,
+           so that next solution can be generated */
         blocksol(it->picosat, it->mem);
         return list;
     }
-    else {                      /* no more solutions -- stop iteration */
+    else if (res == PICOSAT_UNSATISFIABLE) {
+        /* no more solutions -- stop iteration */
+        return NULL;
+    }
+    else {
+        PyErr_Format(PyExc_SystemError,
+                     "did not expect picosat return value: %d", res);
         return NULL;
     }
 }
