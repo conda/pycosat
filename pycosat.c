@@ -39,7 +39,7 @@ static void py_free(void *mmgr, void *ptr, size_t bytes) {
 #endif
 
 static void
-add_solution(PicoSAT * picosat, PyObject* new, char *mem, int max_idx)
+add_solution(PicoSAT *picosat, PyObject *new, char *mem, int max_idx)
 {
     int i, var;
 
@@ -53,7 +53,6 @@ add_solution(PicoSAT * picosat, PyObject* new, char *mem, int max_idx)
                         PyInt_FromLong((long) -var));
     }
     picosat_add (picosat, 0);
-
 }
 
 static int add_clause(PicoSAT *picosat, PyObject *clause)
@@ -133,8 +132,7 @@ static PyObject* solve_all(PyObject *self, PyObject *args)
 
     result = PyList_New(0);  /* If this fails something is seriously wrong */
 
- NEXT_SOLUTION:
-
+NEXT_SOLUTION:
     Py_BEGIN_ALLOW_THREADS  /* release GIL */
     res = picosat_sat(picosat, -1);
     Py_END_ALLOW_THREADS
@@ -183,12 +181,36 @@ static PyObject* solve_all(PyObject *self, PyObject *args)
     return result;
 }
 
+static PyObject* mklist(PicoSAT *picosat)
+{
+    PyObject *list;
+    int max_idx, i, val;
+
+    max_idx = picosat_variables(picosat);
+    list = PyList_New((Py_ssize_t) max_idx);
+    if (list == NULL) {
+        picosat_reset(picosat);
+        return NULL;
+    }
+    for (i = 1; i <= max_idx; i++) {
+        val = picosat_deref(picosat, i);
+        assert(val == -1 || val == 1);
+        if (PyList_SetItem(list, (Py_ssize_t) i - 1,
+                           PyInt_FromLong((long) val * i)) < 0) {
+            Py_DECREF(list);
+            picosat_reset(picosat);
+            return NULL;
+        }
+    }
+    return list;
+}
+
 static PyObject* solve(PyObject* self, PyObject* args)
 {
     PicoSAT *picosat;
     PyObject *clauses;          /* list of clauses */
     PyObject *result = NULL;    /* return value */
-    int res, val, max_idx, i, vars, verbose = 0;
+    int res, vars, verbose = 0;
 
     if (!PyArg_ParseTuple(args, "iO|i:solve", &vars, &clauses, &verbose))
         return NULL;
@@ -215,22 +237,7 @@ static PyObject* solve(PyObject* self, PyObject* args)
 
     switch (res) {
     case PICOSAT_SATISFIABLE:
-        max_idx = picosat_variables(picosat);
-        result = PyList_New((Py_ssize_t) max_idx);
-        if (result == NULL) {
-            picosat_reset(picosat);
-            return NULL;
-        }
-        for (i = 1; i <= max_idx; i++) {
-            val = picosat_deref(picosat, i);
-            assert(val == -1 || val == 1);
-            if (PyList_SetItem(result, (Py_ssize_t) i - 1,
-                               PyInt_FromLong((long) val * i)) < 0) {
-                Py_DECREF(result);
-                picosat_reset(picosat);
-                return NULL;
-            }
-        }
+        result = mklist(picosat);
         break;
 
     case PICOSAT_UNSATISFIABLE:
@@ -292,9 +299,9 @@ static PyObject* itersolve(PyObject* self, PyObject *args)
 
 static PyObject* soliter_next(soliterobject *it)
 {
-    PyObject *new = NULL;       /* one of the solutions */
-    int res, max_idx;
+    PyObject *list = NULL;       /* next solution to be returned */
     char *mem = NULL;
+    int res, max_idx;
 
     assert(SolIter_Check(it));
 
@@ -304,18 +311,18 @@ static PyObject* soliter_next(soliterobject *it)
 
     if (res == PICOSAT_SATISFIABLE) {
         max_idx = picosat_variables(it->picosat);
-        if (!mem) { /* Temporary storage */
-            mem = calloc(max_idx+1, 1);
+        if (!mem) {             /* temporary storage */
+            mem = malloc(max_idx + 1);
+            memset(mem, 0, max_idx + 1);
         }
-        new = PyList_New(max_idx);
-        if (new == NULL) {
-            /* raise */
+        list = PyList_New(max_idx);
+        if (list == NULL)
             return NULL;
-        }
-        /* Move solution to the list and to constraints
+            
+        /* move solution to the list and to constraints
            so that next solution will be generated */
-        add_solution(it->picosat, new, mem, max_idx);
-        return new;
+        add_solution(it->picosat, list, mem, max_idx);
+        return list;
     }
     else {                   /* no more positions -- stop iteration */
         return NULL;
