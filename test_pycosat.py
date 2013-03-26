@@ -56,7 +56,8 @@ class TestSolver(unittest.TestCase):
         self.assertEqual(len(res), 18)
         self.assertEqual(len(set(tuple(sol) for sol in res)), 18)
         for sol in res:
-            verify(5, clauses, sol)
+            sys.stderr.write('%r\n' % repr(sol))
+            self.assertTrue(verify(5, clauses, sol))
 
     def test_unsat_1(self):
         """
