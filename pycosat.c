@@ -56,6 +56,7 @@ static int add_clause(PicoSAT *picosat, PyObject *clause)
 {
     PyObject *lit;              /* the literals are integers */
     Py_ssize_t n, i;
+    int v;
 
     if (!PyList_Check(clause)) {
         PyErr_SetString(PyExc_TypeError, "list expected");
@@ -71,7 +72,12 @@ static int add_clause(PicoSAT *picosat, PyObject *clause)
             PyErr_SetString(PyExc_TypeError, "interger expected");
             return -1;
         }
-        picosat_add(picosat, (int) PyLong_AsLong(lit));
+        v = PyLong_AsLong(lit);
+        if (v == 0) {
+            PyErr_SetString(PyExc_ValueError, "non-zero interger expected");
+            return -1;
+        }
+        picosat_add(picosat, v);
     }
     picosat_add(picosat, 0);
     return 0;
@@ -241,8 +247,7 @@ static PyObject* soliter_next(soliterobject *it)
     }
 }
 
-static void
-soliter_dealloc(soliterobject *it)
+static void soliter_dealloc(soliterobject *it)
 {
     PyObject_GC_UnTrack(it);
     if (it->mem)
@@ -251,8 +256,7 @@ soliter_dealloc(soliterobject *it)
     PyObject_GC_Del(it);
 }
 
-static int
-soliter_traverse(soliterobject *it, visitproc visit, void *arg)
+static int soliter_traverse(soliterobject *it, visitproc visit, void *arg)
 {
     Py_VISIT(it->picosat);
     return 0;

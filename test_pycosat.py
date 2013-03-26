@@ -1,6 +1,6 @@
 import unittest
 
-import pycosat
+from pycosat import solve, itersolve, __version__
 
 # -------------------------- utility functions ---------------------------
 
@@ -22,7 +22,6 @@ def read_cnf(path):
     assert len(clauses) == n_clauses
     return n_vars, clauses
 
-
 def verify(n_vars, clauses, sol):
     sol_vars = {} # variable number -> bool
     for i in sol:
@@ -30,8 +29,7 @@ def verify(n_vars, clauses, sol):
     return all(any(sol_vars[abs(i)] ^ bool(i < 0) for i in clause)
                for clause in clauses)
 
-
-def solveall(n_vars, clauses):
+def py_itersolve(n_vars, clauses):
     while True:
         sol = pycosat.solve(n_vars, clauses)
         if isinstance(sol, list):
@@ -57,33 +55,50 @@ nvars2, clauses2 = 2, [[-1], [1]]
 
 tests = []
 
-class TestSolver(unittest.TestCase):
+class TestSolve(unittest.TestCase):
 
-    def test_solve_1(self):
-        res = pycosat.solve(nvars1, clauses1)
+    def test_wrong_args(self):
+        self.assertRaises(TypeError, solve, 'A', [])
+        self.assertRaises(TypeError, solve, 3, {})
+        self.assertRaises(TypeError, solve, 5, ['a'])
+        self.assertRaises(TypeError, solve, 5, [[1, 2], [3, None]])
+        self.assertRaises(ValueError, solve, 5, [[1, 2], [3, 0]])
+
+    def test_cnf1(self):
+        res = solve(nvars1, clauses1)
         self.assertEqual(res, [1, -2, -3, -4, 5])
 
-    def test_itersolve_1(self):
-        for sol in pycosat.itersolve(nvars1, clauses1):
+    def test_cnf2(self):
+        res = solve(nvars2, clauses2)
+        self.assertEqual(res, "UNSAT")
+
+tests.append(TestSolve)
+
+# -----
+
+class TestIterSolve(unittest.TestCase):
+
+    def test_cnf1(self):
+        for sol in itersolve(nvars1, clauses1):
             #sys.stderr.write('%r\n' % repr(sol))
             self.assertTrue(verify(nvars1, clauses1, sol))
 
-        sols = list(pycosat.itersolve(nvars1, clauses1))
+        sols = list(itersolve(nvars1, clauses1))
         self.assertEqual(len(sols), 18)
         # ensure solutions are unique
         self.assertEqual(len(set(tuple(sol) for sol in sols)), 18)
 
-    def test_solve_2(self):
-        res = pycosat.solve(nvars2, clauses2)
-        self.assertEqual(res, "UNSAT")
+    def test_cnf2(self):
+        sols = list(itersolve(nvars2, clauses2))
+        self.assertEqual(sols, [])
 
-tests.append(TestSolver)
+tests.append(TestIterSolve)
 
 # ------------------------------------------------------------------------
 
 def run(verbosity=1, repeat=1):
     try:
-        print("pycosat version: %r" % pycosat.__version__)
+        print("pycosat version: %r" % __version__)
     except AttributeError:
         pass
     suite = unittest.TestSuite()
@@ -111,7 +126,7 @@ if __name__ == '__main__':
                              (n_vars, len(clauses)))
             sys.stdout.flush()
             n_sol = 0
-            for sol in pycosat.itersolve(n_vars, clauses):
+            for sol in itersolve(n_vars, clauses):
                 sys.stdout.write('.')
                 sys.stdout.flush()
                 assert verify(n_vars, clauses, sol)
