@@ -50,7 +50,7 @@ add_solution(PicoSAT * picosat, PyObject* new, char *mem, int max_idx)
         var = (mem[i] < 0) ? i : -i;
         picosat_add(picosat, var);
         PyList_SET_ITEM(new, (Py_ssize_t) (i-1),
-                        PyInt_FromLong((long) var));
+                        PyInt_FromLong((long) -var));
     }
     picosat_add (picosat, 0);
 

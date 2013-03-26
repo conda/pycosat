@@ -63,7 +63,7 @@ class TestSolver(unittest.TestCase):
         clauses = [[1, -5, 4],
                    [-1, 5, 3, 4],
                    [-3, -4]]
-        res = list(solveall(5, copy.deepcopy(clauses)))
+        res = pycosat.solveall(5, copy.deepcopy(clauses))
         self.assertEqual(len(res), 18)
         self.assertEqual(len(set(tuple(sol) for sol in res)), 18)
         for sol in res:
