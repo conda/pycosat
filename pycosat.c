@@ -39,18 +39,17 @@ static void py_free(void *mmgr, void *ptr, size_t bytes) {
 #endif
 
 static void
-add_solution(PicoSAT *picosat, PyObject *new, char *mem, int max_idx)
+add_solution(PicoSAT *picosat, char *mem)
 {
-    int i, var;
+    int max_idx, i, var;
 
+    max_idx = picosat_variables(picosat);
     for (i = 1; i <= max_idx; i++)
         mem[i] = (picosat_deref (picosat, i) > 0) ? 1 : -1;
 
     for (i = 1; i <= max_idx; i++) {
         var = (mem[i] < 0) ? i : -i;
         picosat_add(picosat, var);
-        PyList_SET_ITEM(new, (Py_ssize_t) (i-1),
-                        PyInt_FromLong((long) -var));
     }
     picosat_add (picosat, 0);
 }
@@ -155,7 +154,7 @@ NEXT_SOLUTION:
         }
         /* Move solution to the list and to constraints
            so that next solution will be generated */
-        add_solution(picosat, new, mem, max_idx);
+        add_solution(picosat, mem);
         Py_DECREF(new);
         goto NEXT_SOLUTION;
     }
@@ -262,6 +261,7 @@ static PyObject* solve(PyObject* self, PyObject* args)
 typedef struct {
     PyObject_HEAD
     PicoSAT *picosat;
+    char *mem;
 } soliterobject;
 
 static PyTypeObject SolIter_Type;
@@ -286,13 +286,13 @@ static PyObject* itersolve(PyObject* self, PyObject *args)
 #else
     it->picosat = picosat_init();
 #endif
-
     picosat_adjust(it->picosat, vars);
     if (add_clauses(it->picosat, clauses) < 0) {
         picosat_reset(it->picosat);
         return NULL;
     }
 
+    it->mem = NULL;
     PyObject_GC_Track(it);
     return (PyObject *) it;
 }
@@ -300,7 +300,6 @@ static PyObject* itersolve(PyObject* self, PyObject *args)
 static PyObject* soliter_next(soliterobject *it)
 {
     PyObject *list = NULL;       /* next solution to be returned */
-    char *mem = NULL;
     int res, max_idx;
 
     assert(SolIter_Check(it));
@@ -310,18 +309,15 @@ static PyObject* soliter_next(soliterobject *it)
     Py_END_ALLOW_THREADS
 
     if (res == PICOSAT_SATISFIABLE) {
-        max_idx = picosat_variables(it->picosat);
-        if (!mem) {             /* temporary storage */
-            mem = malloc(max_idx + 1);
-            memset(mem, 0, max_idx + 1);
-        }
-        list = PyList_New(max_idx);
-        if (list == NULL)
-            return NULL;
-            
+        list = mklist(it->picosat);
         /* move solution to the list and to constraints
            so that next solution will be generated */
-        add_solution(it->picosat, list, mem, max_idx);
+        max_idx = picosat_variables(it->picosat);
+        if (!it->mem) {             /* temporary storage */
+            it->mem = malloc(max_idx + 1);
+            memset(it->mem, 0, max_idx + 1);
+        }
+        add_solution(it->picosat, it->mem);
         return list;
     }
     else {                   /* no more positions -- stop iteration */

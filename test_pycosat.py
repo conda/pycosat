@@ -59,16 +59,16 @@ class TestSolver(unittest.TestCase):
                                 [-3, -4]])
         self.assertEqual(res, [1, -2, -3, -4, 5])
 
-    def test_sat_all_1(self):
-        clauses = [[1, -5, 4],
-                   [-1, 5, 3, 4],
-                   [-3, -4]]
-        res = pycosat.solveall(5, copy.deepcopy(clauses))
-        self.assertEqual(len(res), 18)
-        self.assertEqual(len(set(tuple(sol) for sol in res)), 18)
-        for sol in res:
-            #sys.stderr.write('%r\n' % repr(sol))
-            self.assertTrue(verify(5, clauses, sol))
+#    def test_sat_all_1(self):
+#        clauses = [[1, -5, 4],
+#                   [-1, 5, 3, 4],
+#                   [-3, -4]]
+#        res = pycosat.solveall(5, copy.deepcopy(clauses))
+#        self.assertEqual(len(res), 18)
+#        self.assertEqual(len(set(tuple(sol) for sol in res)), 18)
+#        for sol in res:
+#            #sys.stderr.write('%r\n' % repr(sol))
+#            self.assertTrue(verify(5, clauses, sol))
 
     def test_itersolve(self):
         clauses = [[1, -5, 4],
@@ -111,7 +111,7 @@ if __name__ == '__main__':
     from os.path import basename
 
     if len(sys.argv) == 1:
-        run()
+        run(verbosity=10)
     else:
         for path in sys.argv[1:]:
             sys.stdout.write('%30s:  ' % basename(path))
