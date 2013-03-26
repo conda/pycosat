@@ -23,7 +23,7 @@ setup(
     version = version,
     author = "Ilan Schnell",
     author_email = "ilanschnell@gmail.com",
-    url = "https://github.com/ilanschnell/pycosat",
+    url = "https://github.com/ContinuumIO/pycosat",
     license = "MIT",
     classifiers = [
         "Development Status :: 2 - Pre-Alpha",
