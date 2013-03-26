@@ -105,6 +105,26 @@ static int add_clauses(PicoSAT *picosat, PyObject *clauses)
     return 0;
 }
 
+static PicoSAT* setup_picosat(PyObject* clauses, int vars, int verbose)
+{
+    PicoSAT *picosat;
+
+    picosat = picosat_minit(NULL, py_malloc, py_realloc, py_free);
+    picosat_set_verbosity(picosat, verbose);
+    if (vars != -1)
+        picosat_adjust(picosat, vars);
+
+    if (add_clauses(picosat, clauses) < 0) {
+        picosat_reset(picosat);
+        return NULL;
+    }
+
+    if (verbose >= 2)
+        picosat_print(picosat, stdout);
+
+    return picosat;
+}
+
 static PyObject* mklist(PicoSAT *picosat)
 {
     PyObject *list;
@@ -139,17 +159,9 @@ static PyObject* solve(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O|ii:solve", &clauses, &vars, &verbose))
         return NULL;
 
-    picosat = picosat_minit(NULL, py_malloc, py_realloc, py_free);
-    picosat_set_verbosity(picosat, verbose);
-    if (vars != -1)
-        picosat_adjust(picosat, vars);
-    if (add_clauses(picosat, clauses) < 0) {
-        picosat_reset(picosat);
+    picosat = setup_picosat(clauses, vars, verbose);
+    if (picosat == NULL)
         return NULL;
-    }
-
-    if (verbose >= 2)
-        picosat_print(picosat, stdout);
 
     Py_BEGIN_ALLOW_THREADS      /* release GIL */
     res = picosat_sat(picosat, -1);
@@ -202,14 +214,9 @@ static PyObject* itersolve(PyObject* self, PyObject *args)
     if (it == NULL)
         return NULL;
 
-    it->picosat = picosat_minit(NULL, py_malloc, py_realloc, py_free);
-    picosat_set_verbosity(it->picosat, verbose);
-    if (vars != -1)
-        picosat_adjust(it->picosat, vars);
-    if (add_clauses(it->picosat, clauses) < 0) {
-        picosat_reset(it->picosat);
+    it->picosat = setup_picosat(clauses, vars, verbose);
+    if (it->picosat == NULL)
         return NULL;
-    }
 
     it->mem = NULL;
     PyObject_GC_Track(it);
