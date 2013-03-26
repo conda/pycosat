@@ -105,9 +105,14 @@ static int add_clauses(PicoSAT *picosat, PyObject *clauses)
     return 0;
 }
 
-static PicoSAT* setup_picosat(PyObject* clauses, int vars, int verbose)
+static PicoSAT* setup_picosat(PyObject* args)
 {
     PicoSAT *picosat;
+    PyObject *clauses;          /* list of clauses */
+    int vars = -1, verbose = 0;
+
+    if (!PyArg_ParseTuple(args, "O|ii", &clauses, &vars, &verbose))
+        return NULL;
 
     picosat = picosat_minit(NULL, py_malloc, py_realloc, py_free);
     picosat_set_verbosity(picosat, verbose);
@@ -152,14 +157,10 @@ static PyObject* mklist(PicoSAT *picosat)
 static PyObject* solve(PyObject* self, PyObject* args)
 {
     PicoSAT *picosat;
-    PyObject *clauses;          /* list of clauses */
     PyObject *result = NULL;    /* return value */
-    int res, vars = -1, verbose = 0;
+    int res;
 
-    if (!PyArg_ParseTuple(args, "O|ii:solve", &clauses, &vars, &verbose))
-        return NULL;
-
-    picosat = setup_picosat(clauses, vars, verbose);
+    picosat = setup_picosat(args);
     if (picosat == NULL)
         return NULL;
 
@@ -203,18 +204,13 @@ static PyTypeObject SolIter_Type;
 
 static PyObject* itersolve(PyObject* self, PyObject *args)
 {
-    PyObject *clauses;          /* list of clauses */
     soliterobject *it;          /* iterator to be returned */
-    int vars = -1, verbose = 0;
-
-    if (!PyArg_ParseTuple(args, "O|ii:itersolve", &clauses, &vars, &verbose))
-        return NULL;
 
     it = PyObject_GC_New(soliterobject, &SolIter_Type);
     if (it == NULL)
         return NULL;
 
-    it->picosat = setup_picosat(clauses, vars, verbose);
+    it->picosat = setup_picosat(args);
     if (it->picosat == NULL)
         return NULL;
 
