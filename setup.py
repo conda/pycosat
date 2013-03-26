@@ -5,18 +5,17 @@ from distutils.core import setup, Extension
 version = '0.2.0'
 
 
-ext_kwargs = dict(
+ext_kwds = dict(
     name = "pycosat",
     sources = ["pycosat.c"],
     define_macros = []
 )
 if sys.platform != 'win32':
-    ext_kwargs['define_macros'].append((
-            'PYCOSAT_VERSION', '"%s"' % version))
+    ext_kwds['define_macros'].append(('PYCOSAT_VERSION', '"%s"' % version))
 if '--inplace' in sys.argv:
-    ext_kwargs['define_macros'].append(('DONT_INCLUDE_PICOSAT', 1))
-    ext_kwargs['library_dirs'] = ['.']
-    ext_kwargs['libraries'] = ['picosat']
+    ext_kwds['define_macros'].append(('DONT_INCLUDE_PICOSAT', 1))
+    ext_kwds['library_dirs'] = ['.']
+    ext_kwds['libraries'] = ['picosat']
 
 
 setup(
@@ -35,7 +34,7 @@ setup(
         "Programming Language :: Python :: 3",
         "Topic :: Utilities",
     ],
-    ext_modules = [Extension(**ext_kwargs)],
+    ext_modules = [Extension(**ext_kwds)],
     py_modules = ['test_pycosat'],
     description = "bindings to picosat",
     long_description = open('README.rst').read(),
