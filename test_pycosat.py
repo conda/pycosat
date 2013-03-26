@@ -103,7 +103,7 @@ if __name__ == '__main__':
     from os.path import basename
 
     if len(sys.argv) == 1:
-        run(verbosity=10)
+        run()
     else:
         for path in sys.argv[1:]:
             sys.stdout.write('%30s:  ' % basename(path))
@@ -113,10 +113,11 @@ if __name__ == '__main__':
             sys.stdout.write('vars: %6d   cls: %6d   ' %
                              (n_vars, len(clauses)))
             sys.stdout.flush()
-            sol = '-UNSAT-'
+            n_sol = 0
             for sol in pycosat.itersolve(n_vars, clauses):
                 sys.stdout.write('.')
                 sys.stdout.flush()
                 assert verify(n_vars, clauses, sol)
-            sys.stdout.write("%s\n" % sol)
+                n_sol += 1
+            sys.stdout.write("%d\n" % n_sol)
             sys.stdout.flush()

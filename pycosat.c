@@ -54,7 +54,7 @@ static void blocksol(PicoSAT *picosat, char *mem)
 
 static int add_clause(PicoSAT *picosat, PyObject *clause)
 {
-    PyObject *lit;     /* the literals are integers */
+    PyObject *lit;              /* the literals are integers */
     Py_ssize_t n, i;
 
     if (!PyList_Check(clause)) {
@@ -145,7 +145,7 @@ static PyObject* solve(PyObject* self, PyObject* args)
     if (verbose >= 2)
         picosat_print(picosat, stdout);
 
-    Py_BEGIN_ALLOW_THREADS  /* release GIL */
+    Py_BEGIN_ALLOW_THREADS      /* release GIL */
     res = picosat_sat(picosat, -1);
     Py_END_ALLOW_THREADS
 
