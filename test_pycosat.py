@@ -1,6 +1,7 @@
 import unittest
 
-from pycosat import solve, itersolve, __version__
+import pycosat
+from pycosat import solve, itersolve
 
 # -------------------------- utility functions ---------------------------
 
@@ -58,7 +59,7 @@ tests = []
 class TestSolve(unittest.TestCase):
 
     def test_wrong_args(self):
-        self.assertRaises(TypeError, solve, 'A', [])
+        self.assertRaises(TypeError, solve, 'A', [[1, 2], [3, 4]])
         self.assertRaises(TypeError, solve, 3, {})
         self.assertRaises(TypeError, solve, 5, ['a'])
         self.assertRaises(TypeError, solve, 5, [[1, 2], [3, None]])
@@ -98,7 +99,7 @@ tests.append(TestIterSolve)
 
 def run(verbosity=1, repeat=1):
     try:
-        print("pycosat version: %r" % __version__)
+        print("pycosat version: %r" % pycosat.__version__)
     except AttributeError:
         pass
     suite = unittest.TestSuite()
