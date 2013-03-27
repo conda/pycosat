@@ -1,27 +1,8 @@
 /*
-Copyright (c) 2013, Ilan Schnell, Continuum Analytics, Inc.
-Python bindings to picosat (http://fmv.jku.at/picosat/)
-
-This file is published under the same license as picosat itself, which
-uses an MIT style license.
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to
-deal in the Software without restriction, including without limitation the
-rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
-sell copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-IN THE SOFTWARE.
+  Copyright (c) 2013, Ilan Schnell, Continuum Analytics, Inc.
+  Python bindings to picosat (http://fmv.jku.at/picosat/)
+  This file is published under the same license as picosat itself, which
+  uses an MIT style license.
 */
 
 #include <Python.h>
@@ -116,7 +97,6 @@ static int add_clauses(PicoSAT *picosat, PyObject *clauses)
     PyObject *item;             /* each clause is a list of intergers */
     Py_ssize_t n, i;
 
-    /* printf("HERE>%s<\n", PyString_AS_STRING(PyObject_Repr(iter))); */
     if (!PyList_Check(clauses)) {
         PyErr_SetString(PyExc_TypeError, "list expected");
         return -1;
@@ -138,14 +118,19 @@ static PicoSAT* setup_picosat(PyObject* args)
     PicoSAT *picosat;
     PyObject *clauses;          /* list of clauses */
     int vars = -1, verbose = 0;
+    unsigned long long prop_limit = -1;
 
-    if (!PyArg_ParseTuple(args, "O|ii", &clauses, &vars, &verbose))
+    if (!PyArg_ParseTuple(args, "O|iiK", &clauses, &vars, &verbose,
+                                         &prop_limit))
         return NULL;
 
     picosat = picosat_minit(NULL, py_malloc, py_realloc, py_free);
     picosat_set_verbosity(picosat, verbose);
     if (vars != -1)
         picosat_adjust(picosat, vars);
+
+    if (prop_limit >= 0)
+        picosat_set_propagation_limit(picosat, prop_limit);
 
     if (add_clauses(picosat, clauses) < 0) {
         picosat_reset(picosat);
@@ -291,7 +276,6 @@ static void soliter_dealloc(soliterobject *it)
 
 static int soliter_traverse(soliterobject *it, visitproc visit, void *arg)
 {
-    Py_VISIT(it->picosat);
     return 0;
 }
 

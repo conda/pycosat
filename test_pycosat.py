@@ -73,6 +73,10 @@ class TestSolve(unittest.TestCase):
         res = solve(clauses2)
         self.assertEqual(res, "UNSAT")
 
+    def test_cnf1_prop_limit(self):
+        res = solve(clauses1, nvars1, 0, 2)
+        self.assertEqual(res, "UNKNOWN")
+
 tests.append(TestSolve)
 
 # -----
