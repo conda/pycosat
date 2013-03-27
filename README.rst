@@ -27,6 +27,11 @@ The function ``itersolve`` returns an iterator over solutions.  When the
 propagation limit is specified, exhausting the iterator may not yield all
 possible solution.
 
+Both functions take the following keyword arguments:
+  * ``prop_limit``: the propagation limit (integer)
+  * ``vars``: number of variables (integer)
+  * ``verbose``: the verbosity level (integer)
+
 
 Example
 -------
