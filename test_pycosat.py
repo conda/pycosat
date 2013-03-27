@@ -92,7 +92,7 @@ class TestSolve(unittest.TestCase):
 
     def test_no_clauses(self):
         for n in range(7):
-            self.assertEqual(solve([], n), range(-1, -n-1, -1))
+            self.assertEqual(solve([], n), [-i for i in range(1, n + 1)])
 
     def test_cnf1(self):
         self.assertEqual(solve(clauses1), [1, -2, -3, -4, 5])
