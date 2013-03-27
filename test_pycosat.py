@@ -39,6 +39,23 @@ def py_itersolve(clauses, n_vars):
         else:
             return
 
+def process_cnf_file(path):
+    sys.stdout.write('%30s:  ' % basename(path))
+    sys.stdout.flush()
+
+    clauses, n_vars = read_cnf(path)
+    sys.stdout.write('vars: %6d   cls: %6d   ' % (n_vars, len(clauses)))
+    sys.stdout.flush()
+    n_sol = 0
+    for sol in itersolve(clauses, n_vars):
+        sys.stdout.write('.')
+        sys.stdout.flush()
+        assert verify(clauses, n_vars, sol)
+        n_sol += 1
+    sys.stdout.write("%d\n" % n_sol)
+    sys.stdout.flush()
+    return n_sol
+
 # -------------------------- test clauses --------------------------------
 
 # p cnf 5 3
@@ -131,18 +148,4 @@ if __name__ == '__main__':
         run()
     else:
         for path in sys.argv[1:]:
-            sys.stdout.write('%30s:  ' % basename(path))
-            sys.stdout.flush()
-
-            clauses, n_vars = read_cnf(path)
-            sys.stdout.write('vars: %6d   cls: %6d   ' %
-                             (n_vars, len(clauses)))
-            sys.stdout.flush()
-            n_sol = 0
-            for sol in itersolve(clauses, n_vars):
-                sys.stdout.write('.')
-                sys.stdout.flush()
-                assert verify(clauses, n_vars, sol)
-                n_sol += 1
-            sys.stdout.write("%d\n" % n_sol)
-            sys.stdout.flush()
+            process_cnf_file(path)
