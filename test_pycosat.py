@@ -117,6 +117,17 @@ tests.append(TestSolve)
 
 class TestIterSolve(unittest.TestCase):
 
+    def test_wrong_args(self):
+        self.assertRaises(TypeError, solve, [[1, 2], [-3]], 'A')
+        self.assertRaises(TypeError, solve, {})
+        self.assertRaises(TypeError, solve, ['a'])
+        self.assertRaises(TypeError, solve, [[1, 2], [3, None]], 5)
+        self.assertRaises(ValueError, solve, [[1, 2], [3, 0]])
+
+    def test_no_clauses(self):
+        for n in range(7):
+            self.assertEqual(len(list(itersolve([], vars=n))), 2 ** n)
+
     def test_cnf1(self):
         for sol in itersolve(clauses1, nvars1):
             #sys.stderr.write('%r\n' % repr(sol))
