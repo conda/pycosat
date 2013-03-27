@@ -35,7 +35,7 @@ inline static void py_free(void *mmgr, void *ptr, size_t bytes) {
 }
 
 /* add the inverse of the (current) solution to the clauses */
-static void blocksol(PicoSAT *picosat, char *mem)
+static void blocksol(PicoSAT *picosat, signed char *mem)
 {
     int max_idx, i;
 
@@ -195,7 +195,7 @@ static PyObject* solve(PyObject* self, PyObject* args)
 typedef struct {
     PyObject_HEAD
     PicoSAT *picosat;
-    char *mem;                  /* temporary storage */
+    signed char *mem;           /* temporary storage */
 } soliterobject;
 
 static PyTypeObject SolIter_Type;
