@@ -48,7 +48,6 @@ Now::
    >>> for sol in pycosat.itersolve(cnf):
    ...     print sol
    ...
-   
    [1, -2, -3, -4, 5]
    [1, -2, -3, 4, -5]
    [1, -2, -3, 4, 5]
