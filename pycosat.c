@@ -34,7 +34,8 @@ inline static void py_free(void *mmgr, void *ptr, size_t bytes) {
     PyMem_Free(ptr);
 }
 
-/* add the inverse of the (current) solution to the clauses */
+/* Add the inverse of the (current) solution to the clauses.
+   This function is basically the same as in app.c in the picosat source. */
 static void blocksol(PicoSAT *picosat, signed char *mem)
 {
     int max_idx, i;
