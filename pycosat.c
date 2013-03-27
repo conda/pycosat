@@ -1,3 +1,29 @@
+/*
+Copyright (c) 2013, Ilan Schnell, Continuum Analytics, Inc.
+Python bindings to picosat (http://fmv.jku.at/picosat/)
+
+This file is published under the same license as picosat itself, which
+uses an MIT style license.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to
+deal in the Software without restriction, including without limitation the
+rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+sell copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+IN THE SOFTWARE.
+*/
+
 #include <Python.h>
 
 #ifdef _MSC_VER
@@ -35,7 +61,8 @@ inline static void py_free(void *mmgr, void *ptr, size_t bytes) {
 }
 
 /* Add the inverse of the (current) solution to the clauses.
-   This function is basically the same as in app.c in the picosat source. */
+   This function is essentially the same as the function blocksol in app.c
+   in the picosat source. */
 static void blocksol(PicoSAT *picosat, signed char *mem)
 {
     int max_idx, i;
