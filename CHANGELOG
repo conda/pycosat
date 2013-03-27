@@ -1,3 +1,8 @@
+2013-??-??   0.4.1:
+-------------------
+  * add some documentation
+
+
 2013-03-27   0.4.0:
 -------------------
   * allow keyword arguments to pycosat.solve and pycosat.itersolve
