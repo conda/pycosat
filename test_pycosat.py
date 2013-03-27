@@ -107,7 +107,7 @@ class TestSolve(unittest.TestCase):
         self.assertEqual(solve(clauses3, vars=3), [-1, -2, -3])
 
     def test_cnf1_prop_limit(self):
-        for lim in range(0, 20):
+        for lim in range(1, 20):
             self.assertEqual(solve(clauses1, prop_limit=lim),
                              "UNKNOWN" if lim < 8 else [1, -2, -3, -4, 5])
 
