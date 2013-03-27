@@ -1,3 +1,10 @@
+2013-??-??   0.4.0:
+-------------------
+  * allow keyword arguments to pycosat.solve and pycosat.itersolve
+  * add ability to set propagation limit
+  * fixed some bugs which were causing segfaults
+
+
 2013-03-26   0.3.0:
 -------------------
   * add solution iterator (pycosat.itersolve)
