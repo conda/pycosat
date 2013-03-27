@@ -49,7 +49,7 @@ static void blocksol(PicoSAT *picosat, signed char *mem)
     int max_idx, i;
 
     max_idx = picosat_variables(picosat);
-    if (!mem)
+    if (mem == NULL)
         mem = PyMem_Malloc(max_idx + 1);
 
     for (i = 1; i <= max_idx; i++)
@@ -325,7 +325,7 @@ static PyTypeObject SolIter_Type = {
 static PyMethodDef module_functions[] = {
     {"solve",     (PyCFunction) solve,     METH_VARARGS | METH_KEYWORDS},
     {"itersolve", (PyCFunction) itersolve, METH_VARARGS | METH_KEYWORDS},
-    {NULL,    NULL}  /* sentinel */
+    {NULL,        NULL}  /* sentinel */
 };
 
 /* initialization routine for the shared libary */

@@ -91,20 +91,16 @@ class TestSolve(unittest.TestCase):
         self.assertRaises(ValueError, solve, [[1, 2], [3, 0]])
 
     def test_cnf1(self):
-        self.assertEqual(solve(clauses1),
-                         [1, -2, -3, -4, 5])
+        self.assertEqual(solve(clauses1), [1, -2, -3, -4, 5])
 
     def test_cnf2(self):
-        self.assertEqual(solve(clauses2),
-                         "UNSAT")
+        self.assertEqual(solve(clauses2), "UNSAT")
 
     def test_cnf3(self):
-        self.assertEqual(solve(clauses3),
-                         [-1, -2])
+        self.assertEqual(solve(clauses3), [-1, -2])
 
     def test_cnf3_3vars(self):
-        self.assertEqual(solve(clauses3, vars=3),
-                         [-1, -2, -3])
+        self.assertEqual(solve(clauses3, vars=3), [-1, -2, -3])
 
     def test_cnf1_prop_limit(self):
         for lim in range(0, 20):
@@ -132,16 +128,14 @@ class TestIterSolve(unittest.TestCase):
         self.assertEqual(len(set(tuple(sol) for sol in sols)), 18)
 
     def test_cnf2(self):
-        self.assertEqual(list(itersolve(clauses2, nvars2)),
-                         [])
+        self.assertEqual(list(itersolve(clauses2, nvars2)), [])
 
     def test_cnf3_3vars(self):
         self.assertEqual(list(itersolve(clauses3, 3)),
                          [[-1, -2, -3], [-1, -2, 3]])
 
     def test_cnf1_prop_limit(self):
-        self.assertEqual(list(itersolve(clauses1, prop_limit=2)),
-                         [])
+        self.assertEqual(list(itersolve(clauses1, prop_limit=2)), [])
 
 tests.append(TestIterSolve)
 
