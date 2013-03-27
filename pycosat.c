@@ -113,15 +113,18 @@ static int add_clauses(PicoSAT *picosat, PyObject *clauses)
     return 0;
 }
 
-static PicoSAT* setup_picosat(PyObject* args)
+static PicoSAT* setup_picosat(PyObject* args, PyObject *kwds)
 {
     PicoSAT *picosat;
     PyObject *clauses;          /* list of clauses */
     int vars = -1, verbose = 0;
     unsigned long long prop_limit = -1;
+    static char* kwlist[] = {"clauses",
+                             "vars", "verbose", "prop_limit", NULL};
 
-    if (!PyArg_ParseTuple(args, "O|iiK", &clauses, &vars, &verbose,
-                                         &prop_limit))
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, "O|iiK:(iter)solve", kwlist,
+                                     &clauses,
+                                     &vars, &verbose, &prop_limit))
         return NULL;
 
     picosat = picosat_minit(NULL, py_malloc, py_realloc, py_free);
@@ -167,13 +170,13 @@ static PyObject* get_solution(PicoSAT *picosat)
     return list;
 }
 
-static PyObject* solve(PyObject* self, PyObject* args)
+static PyObject* solve(PyObject* self, PyObject* args, PyObject* kwds)
 {
     PicoSAT *picosat;
     PyObject *result = NULL;    /* return value */
     int res;
 
-    picosat = setup_picosat(args);
+    picosat = setup_picosat(args, kwds);
     if (picosat == NULL)
         return NULL;
 
@@ -215,7 +218,7 @@ static PyTypeObject SolIter_Type;
 
 #define SolIter_Check(op)  PyObject_TypeCheck(op, &SolIter_Type)
 
-static PyObject* itersolve(PyObject* self, PyObject *args)
+static PyObject* itersolve(PyObject* self, PyObject *args, PyObject *kwds)
 {
     soliterobject *it;          /* iterator to be returned */
 
@@ -223,7 +226,7 @@ static PyObject* itersolve(PyObject* self, PyObject *args)
     if (it == NULL)
         return NULL;
 
-    it->picosat = setup_picosat(args);
+    it->picosat = setup_picosat(args, kwds);
     if (it->picosat == NULL)
         return NULL;
 
@@ -243,7 +246,8 @@ static PyObject* soliter_next(soliterobject *it)
     res = picosat_sat(it->picosat, -1);
     Py_END_ALLOW_THREADS
 
-    if (res == PICOSAT_SATISFIABLE) {
+    switch (res) {
+    case PICOSAT_SATISFIABLE:
         list = get_solution(it->picosat);
         if (list == NULL) {
             PyErr_SetString(PyExc_SystemError, "failed to create list");
@@ -253,15 +257,15 @@ static PyObject* soliter_next(soliterobject *it)
            so that next solution can be generated */
         blocksol(it->picosat, it->mem);
         return list;
-    }
-    else if (res == PICOSAT_UNSATISFIABLE) {
+
+    case PICOSAT_UNSATISFIABLE:
+    case PICOSAT_UNKNOWN:
         /* no more solutions -- stop iteration */
         return NULL;
-    }
-    else {
+
+    default:
         PyErr_Format(PyExc_SystemError,
                      "did not expect picosat return value: %d", res);
-        return NULL;
     }
 }
 
@@ -320,8 +324,8 @@ static PyTypeObject SolIter_Type = {
 
 /* declaration of methods supported by this module */
 static PyMethodDef module_functions[] = {
-    {"solve", (PyCFunction) solve, METH_VARARGS},
-    {"itersolve", (PyCFunction) itersolve, METH_VARARGS},
+    {"solve",     (PyCFunction) solve,     METH_VARARGS | METH_KEYWORDS},
+    {"itersolve", (PyCFunction) itersolve, METH_VARARGS | METH_KEYWORDS},
     {NULL,    NULL}  /* sentinel */
 };
 

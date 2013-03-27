@@ -74,7 +74,7 @@ class TestSolve(unittest.TestCase):
         self.assertEqual(res, "UNSAT")
 
     def test_cnf1_prop_limit(self):
-        res = solve(clauses1, nvars1, 0, 2)
+        res = solve(clauses1, prop_limit=2)
         self.assertEqual(res, "UNKNOWN")
 
 tests.append(TestSolve)
@@ -88,7 +88,7 @@ class TestIterSolve(unittest.TestCase):
             #sys.stderr.write('%r\n' % repr(sol))
             self.assertTrue(verify(clauses1, nvars1, sol))
 
-        sols = list(itersolve(clauses1, nvars1))
+        sols = list(itersolve(clauses1, vars=nvars1))
         self.assertEqual(len(sols), 18)
         # ensure solutions are unique
         self.assertEqual(len(set(tuple(sol) for sol in sols)), 18)
@@ -96,6 +96,10 @@ class TestIterSolve(unittest.TestCase):
     def test_cnf2(self):
         sols = list(itersolve(clauses2, nvars2))
         self.assertEqual(sols, [])
+
+    def test_cnf1_prop_limit(self):
+        res = list(itersolve(clauses1, vars=nvars1, verbose=0, prop_limit=2))
+        self.assertEqual(res, [])
 
 tests.append(TestIterSolve)
 
