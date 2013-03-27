@@ -53,7 +53,7 @@ static void blocksol(PicoSAT *picosat, signed char *mem)
         mem = PyMem_Malloc(max_idx + 1);
 
     for (i = 1; i <= max_idx; i++)
-        mem[i] = (picosat_deref (picosat, i) > 0) ? 1 : -1;
+        mem[i] = (picosat_deref(picosat, i) > 0) ? 1 : -1;
 
     for (i = 1; i <= max_idx; i++)
         picosat_add(picosat, (mem[i] < 0) ? i : -i);
@@ -149,7 +149,7 @@ static PicoSAT* setup_picosat(PyObject *args, PyObject *kwds)
 static PyObject* get_solution(PicoSAT *picosat)
 {
     PyObject *list;
-    int max_idx, i, val;
+    int max_idx, i, v;
 
     max_idx = picosat_variables(picosat);
     list = PyList_New((Py_ssize_t) max_idx);
@@ -158,10 +158,10 @@ static PyObject* get_solution(PicoSAT *picosat)
         return NULL;
     }
     for (i = 1; i <= max_idx; i++) {
-        val = picosat_deref(picosat, i);
-        assert(val == -1 || val == 1);
-        if (PyList_SetItem(list, (Py_ssize_t) i - 1,
-                           PyInt_FromLong((long) val * i)) < 0) {
+        v = picosat_deref(picosat, i);
+        assert(v == -1 || v == 1);
+        if (PyList_SetItem(list, (Py_ssize_t) (i - 1),
+                           PyInt_FromLong((long) (v * i))) < 0) {
             Py_DECREF(list);
             picosat_reset(picosat);
             return NULL;

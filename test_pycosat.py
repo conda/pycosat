@@ -71,6 +71,12 @@ nvars1, clauses1 = 5, [[1, -5, 4], [-1, 5, 3, 4], [-3, -4]]
 # 1 0
 nvars2, clauses2 = 2, [[-1], [1]]
 
+# p cnf 2 3
+# -1 2 0
+# -1 -2 0
+# 1 -2 0
+nvars3, clauses3 = 2, [[-1, 2], [-1, -2], [1, -2]]
+
 # -------------------------- actual unit tests ---------------------------
 
 tests = []
@@ -85,20 +91,29 @@ class TestSolve(unittest.TestCase):
         self.assertRaises(ValueError, solve, [[1, 2], [3, 0]])
 
     def test_cnf1(self):
-        res = solve(clauses1)
-        self.assertEqual(res, [1, -2, -3, -4, 5])
+        self.assertEqual(solve(clauses1),
+                         [1, -2, -3, -4, 5])
 
     def test_cnf2(self):
-        res = solve(clauses2)
-        self.assertEqual(res, "UNSAT")
+        self.assertEqual(solve(clauses2),
+                         "UNSAT")
+
+    def test_cnf3(self):
+        self.assertEqual(solve(clauses3),
+                         [-1, -2])
+
+    def test_cnf3_3vars(self):
+        self.assertEqual(solve(clauses3, vars=3),
+                         [-1, -2, -3])
 
     def test_cnf1_prop_limit(self):
-        res = solve(clauses1, prop_limit=2)
-        self.assertEqual(res, "UNKNOWN")
+        for lim in range(0, 20):
+            self.assertEqual(solve(clauses1, prop_limit=lim),
+                             "UNKNOWN" if lim < 8 else [1, -2, -3, -4, 5])
 
     def test_cnf1_vars(self):
-        res = solve(clauses1, vars=7)
-        self.assertEqual(res, [1, -2, -3, -4, 5, -6, -7])
+        self.assertEqual(solve(clauses1, vars=7),
+                         [1, -2, -3, -4, 5, -6, -7])
 
 tests.append(TestSolve)
 
@@ -117,12 +132,16 @@ class TestIterSolve(unittest.TestCase):
         self.assertEqual(len(set(tuple(sol) for sol in sols)), 18)
 
     def test_cnf2(self):
-        sols = list(itersolve(clauses2, nvars2))
-        self.assertEqual(sols, [])
+        self.assertEqual(list(itersolve(clauses2, nvars2)),
+                         [])
+
+    def test_cnf3_3vars(self):
+        self.assertEqual(list(itersolve(clauses3, 3)),
+                         [[-1, -2, -3], [-1, -2, 3]])
 
     def test_cnf1_prop_limit(self):
-        res = list(itersolve(clauses1, prop_limit=2))
-        self.assertEqual(res, [])
+        self.assertEqual(list(itersolve(clauses1, prop_limit=2)),
+                         [])
 
 tests.append(TestIterSolve)
 
