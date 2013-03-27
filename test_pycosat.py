@@ -1,3 +1,5 @@
+import sys
+from os.path import basename
 import unittest
 
 import pycosat
@@ -141,9 +143,6 @@ def run(verbosity=1, repeat=1):
 
 
 if __name__ == '__main__':
-    import sys
-    from os.path import basename
-
     if len(sys.argv) == 1:
         run()
     else:
