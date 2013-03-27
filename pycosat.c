@@ -198,8 +198,7 @@ static PyObject* solve(PyObject *self, PyObject *args, PyObject *kwds)
         break;
 
     default:
-        PyErr_Format(PyExc_SystemError,
-                     "unknown picosat return value: %d", res);
+        PyErr_Format(PyExc_SystemError, "picosat return value: %d", res);
     }
 
     picosat_reset(picosat);
@@ -237,7 +236,7 @@ static PyObject* itersolve(PyObject *self, PyObject *args, PyObject *kwds)
 
 static PyObject* soliter_next(soliterobject *it)
 {
-    PyObject *list;             /* next solution to be returned */
+    PyObject *result = NULL;    /* return value */
     int res;
 
     assert(SolIter_Check(it));
@@ -248,26 +247,25 @@ static PyObject* soliter_next(soliterobject *it)
 
     switch (res) {
     case PICOSAT_SATISFIABLE:
-        list = get_solution(it->picosat);
-        if (list == NULL) {
+        result = get_solution(it->picosat);
+        if (result == NULL) {
             PyErr_SetString(PyExc_SystemError, "failed to create list");
             return NULL;
         }
         /* add inverse solution to the clauses,
            so that next solution can be generated */
         blocksol(it->picosat, it->mem);
-        return list;
+        break;
 
     case PICOSAT_UNSATISFIABLE:
     case PICOSAT_UNKNOWN:
         /* no more solutions -- stop iteration */
-        return NULL;
+        break;
 
     default:
-        PyErr_Format(PyExc_SystemError,
-                     "did not expect picosat return value: %d", res);
-        return NULL;
+        PyErr_Format(PyExc_SystemError, "picosat return value: %d", res);
     }
+    return result;
 }
 
 static void soliter_dealloc(soliterobject *it)
