@@ -1,5 +1,7 @@
+PYTHON=python
+
 pycosat.so: libpicosat.a pycosat.c
-	python setup.py build_ext --inplace
+	$(PYTHON) setup.py build_ext --inplace
 
 picosat.o: picosat.c picosat.h
 	$(CC) $(CFLAGS) -fPIC -c $<
@@ -9,7 +11,7 @@ libpicosat.a: picosat.o
 
 
 test: pycosat.so
-	python test_pycosat.py
+	$(PYTHON) test_pycosat.py
 
 
 clean:
