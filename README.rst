@@ -32,7 +32,7 @@ Example
 -------
 
 Let us consider the following clauses (represented using by
-the `CNF <http://en.wikipedia.org/wiki/Conjunctive_normal_form>`)::
+the `CNF <http://en.wikipedia.org/wiki/Conjunctive_normal_form>`_)::
 
    p cnf 5 3
    1 -5 4 0
@@ -53,4 +53,4 @@ Now::
    [1, -2, -3, 4, 5]
    ...
 
-There are a total of 18 possible solutions.
+In this example, there are a total of 18 possible solutions.
