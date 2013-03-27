@@ -134,7 +134,7 @@ if __name__ == '__main__':
             sys.stdout.write('%30s:  ' % basename(path))
             sys.stdout.flush()
 
-            n_vars, clauses = read_cnf(path)
+            clauses, n_vars = read_cnf(path)
             sys.stdout.write('vars: %6d   cls: %6d   ' %
                              (n_vars, len(clauses)))
             sys.stdout.flush()
