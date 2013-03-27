@@ -118,7 +118,7 @@ static PicoSAT* setup_picosat(PyObject *args, PyObject *kwds)
     PicoSAT *picosat;
     PyObject *clauses;          /* list of clauses */
     int vars = -1, verbose = 0;
-    unsigned long long prop_limit = -1;
+    unsigned long long prop_limit = 0;
     static char* kwlist[] = {"clauses",
                              "vars", "verbose", "prop_limit", NULL};
 
@@ -132,7 +132,7 @@ static PicoSAT* setup_picosat(PyObject *args, PyObject *kwds)
     if (vars != -1)
         picosat_adjust(picosat, vars);
 
-    if (prop_limit >= 0)
+    if (prop_limit)
         picosat_set_propagation_limit(picosat, prop_limit);
 
     if (add_clauses(picosat, clauses) < 0) {

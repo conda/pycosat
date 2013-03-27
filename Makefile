@@ -1,4 +1,4 @@
-PYTHON=python
+PYTHON=~/py33/bin/python
 
 pycosat.so: libpicosat.a pycosat.c
 	$(PYTHON) setup.py build_ext --inplace
