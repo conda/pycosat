@@ -113,7 +113,7 @@ static int add_clauses(PicoSAT *picosat, PyObject *clauses)
     return 0;
 }
 
-static PicoSAT* setup_picosat(PyObject* args, PyObject *kwds)
+static PicoSAT* setup_picosat(PyObject *args, PyObject *kwds)
 {
     PicoSAT *picosat;
     PyObject *clauses;          /* list of clauses */
@@ -170,7 +170,7 @@ static PyObject* get_solution(PicoSAT *picosat)
     return list;
 }
 
-static PyObject* solve(PyObject* self, PyObject* args, PyObject* kwds)
+static PyObject* solve(PyObject *self, PyObject *args, PyObject *kwds)
 {
     PicoSAT *picosat;
     PyObject *result = NULL;    /* return value */
@@ -218,7 +218,7 @@ static PyTypeObject SolIter_Type;
 
 #define SolIter_Check(op)  PyObject_TypeCheck(op, &SolIter_Type)
 
-static PyObject* itersolve(PyObject* self, PyObject *args, PyObject *kwds)
+static PyObject* itersolve(PyObject *self, PyObject *args, PyObject *kwds)
 {
     soliterobject *it;          /* iterator to be returned */
 
@@ -237,7 +237,7 @@ static PyObject* itersolve(PyObject* self, PyObject *args, PyObject *kwds)
 
 static PyObject* soliter_next(soliterobject *it)
 {
-    PyObject *list = NULL;      /* next solution to be returned */
+    PyObject *list;             /* next solution to be returned */
     int res;
 
     assert(SolIter_Check(it));
