@@ -77,6 +77,10 @@ class TestSolve(unittest.TestCase):
         res = solve(clauses1, prop_limit=2)
         self.assertEqual(res, "UNKNOWN")
 
+    def test_cnf1_vars(self):
+        res = solve(clauses1, vars=7)
+        self.assertEqual(res, [1, -2, -3, -4, 5, -6, -7])
+
 tests.append(TestSolve)
 
 # -----
@@ -98,7 +102,7 @@ class TestIterSolve(unittest.TestCase):
         self.assertEqual(sols, [])
 
     def test_cnf1_prop_limit(self):
-        res = list(itersolve(clauses1, vars=nvars1, verbose=0, prop_limit=2))
+        res = list(itersolve(clauses1, prop_limit=2))
         self.assertEqual(res, [])
 
 tests.append(TestIterSolve)
