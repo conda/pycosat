@@ -266,6 +266,7 @@ static PyObject* soliter_next(soliterobject *it)
     default:
         PyErr_Format(PyExc_SystemError,
                      "did not expect picosat return value: %d", res);
+        return NULL;
     }
 }
 
