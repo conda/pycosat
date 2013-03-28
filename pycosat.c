@@ -29,6 +29,8 @@
 #endif
 
 
+/* the following three adapter functions are used as arguments to
+   picosat_minit, such that picosat used the Python memory manager */
 inline static void *py_malloc(void *mmgr, size_t bytes)
 {
     void *ptr;
