@@ -29,15 +29,30 @@
 #endif
 
 
-inline static void *py_malloc(void *mmgr, size_t bytes) {
-    return PyMem_Malloc(bytes);
+inline static void *py_malloc(void *mmgr, size_t bytes)
+{
+    void *ptr;
+
+    ptr = PyMem_Malloc(bytes);
+    if (ptr == NULL) {
+        PyErr_NoMemory();
+        return NULL;
+    }
+    return ptr;
 }
 
-inline static void *py_realloc(void *mmgr, void *ptr, size_t old, size_t new) {
-    return PyMem_Realloc(ptr, new);
+inline static void *py_realloc(void *mmgr, void *ptr, size_t old, size_t new)
+{
+    ptr = PyMem_Realloc(ptr, new);
+    if (ptr == NULL) {
+        PyErr_NoMemory();
+        return NULL;
+    }
+    return ptr;
 }
 
-inline static void py_free(void *mmgr, void *ptr, size_t bytes) {
+inline static void py_free(void *mmgr, void *ptr, size_t bytes)
+{
     PyMem_Free(ptr);
 }
 

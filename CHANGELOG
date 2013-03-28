@@ -2,6 +2,7 @@
 -------------------
   * add documentation
   * added more tests
+  * add error handling for memory management
 
 
 2013-03-27   0.4.0:
