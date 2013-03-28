@@ -94,8 +94,9 @@ Implementation of itersolve
 How does one go from having found one solution to another solution?
 The answer is surprisingly simple.  One adds the *inverse* of the already
 found solution as a new clause.  This new clause ensures that another
-solution (if any) is searched for.  Here is basically a pure Python
-implementation of ``itersolve`` in terms of ``solve``::
+solution is searched for, as it *excludes* the already found solution.
+Here is basically a pure Python implementation of ``itersolve`` in terms
+of ``solve``::
 
    def py_itersolve(clauses): # don't use this function!
        while True:            # (it is only here to explain things)
