@@ -1,5 +1,3 @@
-PYTHON=python
-
 pycosat.so: libpicosat.a pycosat.c
 	$(PYTHON) setup.py build_ext --inplace
 
@@ -16,4 +14,4 @@ test: pycosat.so
 
 clean:
 	rm -rf build dist *.egg-info
-	rm -f pycosat.so picosat.o libpicosat.a
+	rm -f *.pyc *.so *.o *.a

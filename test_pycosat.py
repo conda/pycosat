@@ -1,4 +1,6 @@
 import sys
+import copy
+import random
 from os.path import basename
 import unittest
 
@@ -141,6 +143,22 @@ class TestIterSolve(unittest.TestCase):
         self.assertEqual(len(sols), 18)
         # ensure solutions are unique
         self.assertEqual(len(set(tuple(sol) for sol in sols)), 18)
+
+    def test_shuffle_clauses(self):
+        ref_sols = set(tuple(sol) for sol in itersolve(clauses1))
+        for _ in range(10):
+            cnf = copy.deepcopy(clauses1)
+            # shuffling the clauses does not change the solutions
+            random.shuffle(cnf)
+            self.assertEqual(set(tuple(sol) for sol in itersolve(cnf)),
+                             ref_sols)
+
+    def test_many_clauses(self):
+        ref_sols = set(tuple(sol) for sol in itersolve(clauses1))
+        # repeating the clauses many times does not change the solutions
+        cnf = 100 * copy.deepcopy(clauses1)
+        self.assertEqual(set(tuple(sol) for sol in itersolve(cnf)),
+                         ref_sols)
 
     def test_cnf2(self):
         self.assertEqual(list(itersolve(clauses2, nvars2)), [])

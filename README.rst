@@ -75,5 +75,5 @@ To find all solution to the problems::
    >>> len(list(pycosat.itersolve(cnf)))
    18
 
-In this example, there are a total of 18 possible solutions, which has to
+In this example, there are a total of 18 possible solutions, which had to
 be an even number because x\ :sub:`2` was left unspecified in the clauses.
