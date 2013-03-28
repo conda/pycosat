@@ -34,13 +34,13 @@ def verify(clauses, n_vars, sol):
     return all(any(sol_vars[abs(i)] ^ bool(i < 0) for i in clause)
                for clause in clauses)
 
-def py_itersolve(clauses, n_vars):
+def py_itersolve(clauses):
     while True:
-        sol = pycosat.solve(clauses, n_vars)
+        sol = pycosat.solve(clauses)
         if isinstance(sol, list):
             yield sol
             clauses.append([-x for x in sol])
-        else:
+        else: # no more solutions -- stop iteration
             return
 
 def process_cnf_file(path):

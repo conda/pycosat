@@ -63,7 +63,7 @@ absolute value corresponds to i\ :sup:`th` variable::
 This solution translates to: x\ :sub:`1` = x\ :sub:`5` = True,
 x\ :sub:`2` = x\ :sub:`3` = x\ :sub:`4` = False
 
-To find all solution to the problems::
+To find all solution, use ``itersolve``:
 
    >>> for sol in pycosat.itersolve(cnf):
    ...     print sol
@@ -77,3 +77,38 @@ To find all solution to the problems::
 
 In this example, there are a total of 18 possible solutions, which had to
 be an even number because x\ :sub:`2` was left unspecified in the clauses.
+
+The fact that ``itersolve`` returns an iterator, makes it many types
+of operations very elegant and efficient.  For example, using
+the ``itertools`` module from the standard library, here is how one
+would construct a list of (up to) 3 solutions::
+
+   >>> import itertools
+   >>> list(itertools.islice(pycosat.itersolve(cnf), 3))
+   [[1, -2, -3, -4, 5], [1, -2, -3, 4, -5], [1, -2, -3, 4, 5]]
+
+
+Implementation of itersolve:
+----------------------------
+
+How does one go from having found one solution to another solution?
+The answer is surprisingly simple.  One adds the *inverse* of the already
+found solution as a new clause.  This new clause ensures that another
+solution (if any) is searched for.  Here is basically a pure Python
+implementation of ``itersolve`` in terms of ``solve``::
+
+   def py_itersolve(clauses): # don't use this function!
+       while True:            # (it is only here to explain things)
+           sol = pycosat.solve(clauses)
+           if isinstance(sol, list):
+               yield sol
+               clauses.append([-x for x in sol])
+           else: # no more solutions -- stop iteration
+               return
+
+This implementation has several problems.  Firstly, it is quite slow as
+``pycosat.solve`` has to convert the list of clauses over and over and over
+again.  Secondly, after calling ``py_itersolve`` the list of clauses will
+be modified.  In pycosat, ``itersolve`` is implemented on the C level,
+making use of the picosat C interface (which makes it orders of magnitude
+faster than the Python implementation above).
