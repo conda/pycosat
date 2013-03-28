@@ -36,20 +36,33 @@ Both functions take the following keyword arguments:
 Example
 -------
 
-Let us consider the following clauses (represented using by
-the `CNF <http://en.wikipedia.org/wiki/Conjunctive_normal_form>`_)::
+Let us consider the following clauses, represented using by
+the DIMACS `cnf <http://en.wikipedia.org/wiki/Conjunctive_normal_form>`_
+format::
 
    p cnf 5 3
    1 -5 4 0
    -1 5 3 4 0
    -3 -4 0
 
-Now::
+Here, we have 5 variables and 3 clauses, the first clause being
+(x_1 or not x_5 or x_4).  Note that the variable x_2 is not used in any
+of the clauses, which means that for each solution with x_2 = True, we must
+also have a solution with x_2 = False.  In Python, each clause is most
+conveniently represented as a list of integers.  Naturally, it makes
+sense to represent each solution also as list of integers, where the sign
+corresponds to the boolean value (+ for True and - for False) and the
+absolute value corresponds to i^th variable::
 
    >>> import pycosat
    >>> cnf = [[1, -5, 4], [-1, 5, 3, 4], [-3, -4]]
    >>> pycosat.solve(cnf)
    [1, -2, -3, -4, 5]
+
+This solution translates to: x_1 = x_5 = True, x_2 = x_3 = x_4 = False
+
+To find all solution to the problems::
+
    >>> for sol in pycosat.itersolve(cnf):
    ...     print sol
    ...
