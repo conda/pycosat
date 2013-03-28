@@ -53,14 +53,15 @@ also have a solution with x\ :sub:`2` = False.  In Python, each clause is
 most conveniently represented as a list of integers.  Naturally, it makes
 sense to represent each solution also as list of integers, where the sign
 corresponds to the boolean value (+ for True and - for False) and the
-absolute value corresponds to i^th variable::
+absolute value corresponds to i\ :sup:`th` variable::
 
    >>> import pycosat
    >>> cnf = [[1, -5, 4], [-1, 5, 3, 4], [-3, -4]]
    >>> pycosat.solve(cnf)
    [1, -2, -3, -4, 5]
 
-This solution translates to: x_1 = x_5 = True, x_2 = x_3 = x_4 = False
+This solution translates to: x\ :sub:`1` = x\ :sub:`5` = True,
+x\ :sub:`2` = x\ :sub:`3` = x\ :sub:`4` = False
 
 To find all solution to the problems::
 
@@ -71,5 +72,8 @@ To find all solution to the problems::
    [1, -2, -3, 4, -5]
    [1, -2, -3, 4, 5]
    ...
+   >>> len(list(pycosat.itersolve(cnf)))
+   18
 
-In this example, there are a total of 18 possible solutions.
+In this example, there are a total of 18 possible solutions, which has to
+be an even number because x\ :sub:`2` was left unspecified in the clauses.
