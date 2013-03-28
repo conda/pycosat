@@ -46,10 +46,11 @@ format::
    -3 -4 0
 
 Here, we have 5 variables and 3 clauses, the first clause being
-(x_1 or not x_5 or x_4).  Note that the variable x_2 is not used in any
-of the clauses, which means that for each solution with x_2 = True, we must
-also have a solution with x_2 = False.  In Python, each clause is most
-conveniently represented as a list of integers.  Naturally, it makes
+(x\ :sub:`1`  or not x\ :sub:`5` or x\ :sub:`4`).
+Note that the variable x\ :sub:`2` is not used in any of the clauses,
+which means that for each solution with x\ :sub:`2` = True, we must
+also have a solution with x\ :sub:`2` = False.  In Python, each clause is
+most conveniently represented as a list of integers.  Naturally, it makes
 sense to represent each solution also as list of integers, where the sign
 corresponds to the boolean value (+ for True and - for False) and the
 absolute value corresponds to i^th variable::
