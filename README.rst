@@ -110,5 +110,5 @@ This implementation has several problems.  Firstly, it is quite slow as
 ``pycosat.solve`` has to convert the list of clauses over and over and over
 again.  Secondly, after calling ``py_itersolve`` the list of clauses will
 be modified.  In pycosat, ``itersolve`` is implemented on the C level,
-making use of the picosat C interface (which makes it orders of magnitude
-faster than the Python implementation above).
+making use of the picosat C interface (which makes it much, much faster
+than the Python implementation above).
