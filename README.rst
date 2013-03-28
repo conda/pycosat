@@ -2,7 +2,7 @@
 pycosat: bindings to picosat (a SAT solver)
 ===========================================
 
-Python bindings to picosat: http://fmv.jku.at/picosat/
+Python bindings to `PicoSAT <http://fmv.jku.at/picosat/>`_ by Armin Biere. 
 
 For ease if deployment, the picosat source (namely picosat.c and picosat.h)
 is included in this project.  These files have been extracted from the
