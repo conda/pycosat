@@ -10,6 +10,10 @@ from pycosat import solve, itersolve
 # -------------------------- utility functions ---------------------------
 
 def read_cnf(path):
+    """
+    read a DIMACS cnf formatted file from `path`, and return the clauses
+    and number of variables
+    """
     clauses = []
     for line in open(path):
         parts = line.split()
@@ -27,7 +31,10 @@ def read_cnf(path):
     assert len(clauses) == n_clauses
     return clauses, n_vars
 
-def verify(clauses, n_vars, sol):
+def evaluate(clauses, sol):
+    """
+    evaluate the clauses with the solution
+    """
     sol_vars = {} # variable number -> bool
     for i in sol:
         sol_vars[abs(i)] = bool(i > 0)
@@ -54,7 +61,7 @@ def process_cnf_file(path):
     for sol in itersolve(clauses, n_vars):
         sys.stdout.write('.')
         sys.stdout.flush()
-        assert verify(clauses, n_vars, sol)
+        assert evaluate(clauses, sol)
         n_sol += 1
     sys.stdout.write("%d\n" % n_sol)
     sys.stdout.flush()
@@ -137,7 +144,7 @@ class TestIterSolve(unittest.TestCase):
     def test_cnf1(self):
         for sol in itersolve(clauses1, nvars1):
             #sys.stderr.write('%r\n' % repr(sol))
-            self.assertTrue(verify(clauses1, nvars1, sol))
+            self.assertTrue(evaluate(clauses1, sol))
 
         sols = list(itersolve(clauses1, vars=nvars1))
         self.assertEqual(len(sols), 18)

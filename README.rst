@@ -63,7 +63,7 @@ absolute value corresponds to i\ :sup:`th` variable::
 This solution translates to: x\ :sub:`1` = x\ :sub:`5` = True,
 x\ :sub:`2` = x\ :sub:`3` = x\ :sub:`4` = False
 
-To find all solution, use ``itersolve``:
+To find all solution, use ``itersolve``::
 
    >>> for sol in pycosat.itersolve(cnf):
    ...     print sol
@@ -88,8 +88,8 @@ would construct a list of (up to) 3 solutions::
    [[1, -2, -3, -4, 5], [1, -2, -3, 4, -5], [1, -2, -3, 4, 5]]
 
 
-Implementation of itersolve:
-----------------------------
+Implementation of itersolve
+---------------------------
 
 How does one go from having found one solution to another solution?
 The answer is surprisingly simple.  One adds the *inverse* of the already
