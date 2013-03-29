@@ -4,7 +4,7 @@ pycosat: bindings to picosat (a SAT solver)
 
 Python bindings to `PicoSAT <http://fmv.jku.at/picosat/>`_ by Armin Biere. 
 
-For ease if deployment, the picosat source (namely picosat.c and picosat.h)
+For ease of deployment, the picosat source (namely picosat.c and picosat.h)
 is included in this project.  These files have been extracted from the
 picosat source (picosat-954.tar.gz), which can be downloaded from the
 URL above.
@@ -15,7 +15,7 @@ Usage
 
 The ``pycosat`` module has two functions ``solve`` and ``itersolve``,
 with both take a list of clauses as an argument.  Each clause is itself
-is represented as a list of (non-zero) integers.
+represented as a list of (non-zero) integers.
 
 The function ``solve`` returns one of the following:
   * one solution (a list of integers)
@@ -25,7 +25,7 @@ The function ``solve`` returns one of the following:
 
 The function ``itersolve`` returns an iterator over solutions.  When the
 propagation limit is specified, exhausting the iterator may not yield all
-possible solution.
+possible solutions.
 
 Both functions take the following keyword arguments:
   * ``prop_limit``: the propagation limit (integer)
@@ -36,7 +36,7 @@ Both functions take the following keyword arguments:
 Example
 -------
 
-Let us consider the following clauses, represented using by
+Let us consider the following clauses, represented using
 the DIMACS `cnf <http://en.wikipedia.org/wiki/Conjunctive_normal_form>`_
 format::
 
@@ -51,7 +51,7 @@ Note that the variable x\ :sub:`2` is not used in any of the clauses,
 which means that for each solution with x\ :sub:`2` = True, we must
 also have a solution with x\ :sub:`2` = False.  In Python, each clause is
 most conveniently represented as a list of integers.  Naturally, it makes
-sense to represent each solution also as list of integers, where the sign
+sense to represent each solution also as a list of integers, where the sign
 corresponds to the boolean value (+ for True and - for False) and the
 absolute value corresponds to i\ :sup:`th` variable::
 
@@ -63,7 +63,7 @@ absolute value corresponds to i\ :sup:`th` variable::
 This solution translates to: x\ :sub:`1` = x\ :sub:`5` = True,
 x\ :sub:`2` = x\ :sub:`3` = x\ :sub:`4` = False
 
-To find all solution, use ``itersolve``::
+To find all solutions, use ``itersolve``::
 
    >>> for sol in pycosat.itersolve(cnf):
    ...     print sol
@@ -78,8 +78,8 @@ To find all solution, use ``itersolve``::
 In this example, there are a total of 18 possible solutions, which had to
 be an even number because x\ :sub:`2` was left unspecified in the clauses.
 
-The fact that ``itersolve`` returns an iterator, makes it many types
-of operations very elegant and efficient.  For example, using
+The fact that ``itersolve`` returns an iterator, makes it very elegant
+and efficient for many types of operations.  For example, using
 the ``itertools`` module from the standard library, here is how one
 would construct a list of (up to) 3 solutions::
 
