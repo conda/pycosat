@@ -36,6 +36,6 @@ setup(
     ],
     ext_modules = [Extension(**ext_kwds)],
     py_modules = ['test_pycosat'],
-    description = "bindings to picosat",
+    description = "bindings to picosat (a SAT solver)",
     long_description = open('README.rst').read(),
 )

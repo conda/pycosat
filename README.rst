@@ -2,13 +2,14 @@
 pycosat: bindings to picosat (a SAT solver)
 ===========================================
 
-Python bindings to `PicoSAT <http://fmv.jku.at/picosat/>`_ by Armin Biere. 
-
-For ease of deployment, the picosat source (namely picosat.c and picosat.h)
-is included in this project.  These files have been extracted from the
-picosat source (picosat-954.tar.gz), which can be downloaded from the
-URL above.
-
+`PicoSAT <http://fmv.jku.at/picosat/>`_ is a popular
+`SAT <http://en.wikipedia.org/wiki/Boolean_satisfiability_problem>`_ solver
+written by Armin Biere in pure C.
+This package provides efficient Python bindings to picosat on the C level,
+i.e. when importing pycosat, the picosat solver becomes part of the
+Python process itself.  For ease of deployment, the picosat source (namely
+picosat.c and picosat.h) is included in this project.  These files have
+been extracted from the picosat source (picosat-954.tar.gz).
 
 Usage
 -----
