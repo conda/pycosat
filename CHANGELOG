@@ -1,3 +1,9 @@
+2013-??-??   0.4.2:
+-------------------
+  * fixed types in readme
+  * add docstings to solve and itersolve (to do)
+
+
 2013-03-28   0.4.1:
 -------------------
   * add documentation
