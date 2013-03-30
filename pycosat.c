@@ -156,6 +156,7 @@ static PicoSAT* setup_picosat(PyObject *args, PyObject *kwds)
     return picosat;
 }
 
+/* read the solution from the picosat object and return a Python list */
 static PyObject* get_solution(PicoSAT *picosat)
 {
     PyObject *list;
@@ -262,8 +263,7 @@ static PyObject* soliter_next(soliterobject *it)
             PyErr_SetString(PyExc_SystemError, "failed to create list");
             return NULL;
         }
-        /* add inverse solution to the clauses,
-           so that next solution can be generated */
+        /* add inverse solution to the clauses, for next interation */
         if (blocksol(it->picosat, it->mem) < 0)
             return NULL;
         break;
