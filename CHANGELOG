@@ -1,6 +1,7 @@
 2013-??-??   0.4.2:
 -------------------
   * fixed types in readme
+  * add SAT-based Sudoku solver as an example
   * add docstings to solve and itersolve (to do)
 
 
