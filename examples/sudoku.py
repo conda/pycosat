@@ -55,7 +55,7 @@ def sudoku_clauses():
     # ensure 3x3 sub-grids "regions" have distinct values
     for i in 1, 4, 7:
         for j in 1, 4 ,7:
-            valid([(i + k % 3, j + k / 3) for k in range(9)])
+            valid([(i + k % 3, j + k // 3) for k in range(9)])
 
     assert len(res) == 81 * (1 + 36) + 27 * 324
     return res
