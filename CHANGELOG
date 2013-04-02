@@ -3,6 +3,7 @@
   * fixed types in readme
   * add SAT-based Sudoku solver as an example
   * add docstings to solve and itersolve
+  * add test for clauses containing type long literals on Python 2
 
 
 2013-03-28   0.4.1:

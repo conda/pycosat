@@ -105,6 +105,9 @@ class TestSolve(unittest.TestCase):
 
     def test_cnf1(self):
         self.assertEqual(solve(clauses1), [1, -2, -3, -4, 5])
+        if sys.version_info[0] == 2:
+            cls = [[long(lit) for lit in clause] for clause in clauses1]
+            self.assertEqual(solve(cls), [1, -2, -3, -4, 5])
 
     def test_cnf2(self):
         self.assertEqual(solve(clauses2), "UNSAT")
