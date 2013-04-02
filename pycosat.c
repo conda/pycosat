@@ -88,12 +88,12 @@ static int add_clause(PicoSAT *picosat, PyObject *clause)
         if (lit == NULL)
             return -1;
         if (!IS_INT(lit))  {
-            PyErr_SetString(PyExc_TypeError, "interger expected");
+            PyErr_SetString(PyExc_TypeError, "integer expected");
             return -1;
         }
         v = PyLong_AsLong(lit);
         if (v == 0) {
-            PyErr_SetString(PyExc_ValueError, "non-zero interger expected");
+            PyErr_SetString(PyExc_ValueError, "non-zero integer expected");
             return -1;
         }
         picosat_add(picosat, v);
@@ -216,6 +216,13 @@ static PyObject* solve(PyObject *self, PyObject *args, PyObject *kwds)
     return result;
 }
 
+PyDoc_STRVAR(solve_doc,
+"solve(clauses [, kwargs]) -> list\n\
+\n\
+Solve the SAT problem for the clauses, and return a solution as a\n\
+list of integers, or one of the strings \"UNSAT\", \"UNKNOWN\".\n\
+Please see https://pypi.python.org/pypi/pycosat for more details.");
+
 /*********************** Solution Iterator *********************/
 
 typedef struct {
@@ -244,6 +251,13 @@ static PyObject* itersolve(PyObject *self, PyObject *args, PyObject *kwds)
     PyObject_GC_Track(it);
     return (PyObject *) it;
 }
+
+PyDoc_STRVAR(itersolve_doc,
+"itersolve(clauses [, kwargs]) -> interator\n\
+\n\
+Solve the SAT problem for the clauses, and return an iterator over\n\
+the solutions (which are lists of integers).\n\
+Please see https://pypi.python.org/pypi/pycosat for more details.");
 
 static PyObject* soliter_next(soliterobject *it)
 {
@@ -334,8 +348,10 @@ static PyTypeObject SolIter_Type = {
 
 /* declaration of methods supported by this module */
 static PyMethodDef module_functions[] = {
-    {"solve",     (PyCFunction) solve,     METH_VARARGS | METH_KEYWORDS},
-    {"itersolve", (PyCFunction) itersolve, METH_VARARGS | METH_KEYWORDS},
+    {"solve",     (PyCFunction) solve,     METH_VARARGS | METH_KEYWORDS,
+      solve_doc},
+    {"itersolve", (PyCFunction) itersolve, METH_VARARGS | METH_KEYWORDS,
+      itersolve_doc},
     {NULL,        NULL}  /* sentinel */
 };
 
