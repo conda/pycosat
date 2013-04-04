@@ -4,6 +4,7 @@
   This file is published under the same license as picosat itself, which
   uses an MIT style license.
 */
+#define PYCOSAT_URL  "https://pypi.python.org/pypi/pycosat"
 
 #include <Python.h>
 
@@ -221,7 +222,7 @@ PyDoc_STRVAR(solve_doc,
 \n\
 Solve the SAT problem for the clauses, and return a solution as a\n\
 list of integers, or one of the strings \"UNSAT\", \"UNKNOWN\".\n\
-Please see https://pypi.python.org/pypi/pycosat for more details.");
+Please see " PYCOSAT_URL " for more details.");
 
 /*********************** Solution Iterator *********************/
 
@@ -257,7 +258,7 @@ PyDoc_STRVAR(itersolve_doc,
 \n\
 Solve the SAT problem for the clauses, and return an iterator over\n\
 the solutions (which are lists of integers).\n\
-Please see https://pypi.python.org/pypi/pycosat for more details.");
+Please see " PYCOSAT_URL " for more details.");
 
 static PyObject* soliter_next(soliterobject *it)
 {
@@ -355,6 +356,12 @@ static PyMethodDef module_functions[] = {
     {NULL,        NULL}  /* sentinel */
 };
 
+PyDoc_STRVAR(module_doc, "\
+pycosat: bindings to PicoSAT\n\
+============================\n\n\
+There are two functions in this module, solve and itersolve.\n\
+Please see " PYCOSAT_URL " for more details.");
+
 /* initialization routine for the shared libary */
 #ifdef IS_PY3K
 static PyModuleDef moduledef = {
@@ -372,7 +379,7 @@ PyMODINIT_FUNC initpycosat(void)
     if (m == NULL)
         return NULL;
 #else
-    m = Py_InitModule3("pycosat", module_functions, 0);
+    m = Py_InitModule3("pycosat", module_functions, module_doc);
     if (m == NULL)
         return;
 #endif
