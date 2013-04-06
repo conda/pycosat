@@ -365,7 +365,7 @@ Please see " PYCOSAT_URL " for more details.");
 /* initialization routine for the shared libary */
 #ifdef IS_PY3K
 static PyModuleDef moduledef = {
-    PyModuleDef_HEAD_INIT, "pycosat", 0, -1, module_functions,
+    PyModuleDef_HEAD_INIT, "pycosat", module_doc, -1, module_functions,
 };
 PyMODINIT_FUNC PyInit_pycosat(void)
 #else
