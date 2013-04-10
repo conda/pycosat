@@ -2,7 +2,7 @@ import sys
 from distutils.core import setup, Extension
 
 
-version = '0.4.2'
+version = '0.5.0'
 
 
 ext_kwds = dict(
