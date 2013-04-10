@@ -186,6 +186,7 @@ tests.append(TestIterSolve)
 
 def run(verbosity=1, repeat=1):
     print("sys.prefix: %s" % sys.prefix)
+    print("sys.version: %s" % sys.version)
     try:
         print("pycosat version: %r" % pycosat.__version__)
     except AttributeError:

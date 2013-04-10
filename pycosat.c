@@ -29,6 +29,9 @@
 #define IS_INT(x)  (PyInt_Check(x) || PyLong_Check(x))
 #endif
 
+#if PY_MAJOR_VERSION == 2 && PY_MINOR_VERSION <= 5
+#define PyUnicode_FromString  PyString_FromString
+#endif
 
 /* the following three adapter functions are used as arguments to
    picosat_minit, such that picosat used the Python memory manager */
