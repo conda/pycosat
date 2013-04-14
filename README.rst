@@ -53,7 +53,7 @@ which means that for each solution with x\ :sub:`2` = True, we must
 also have a solution with x\ :sub:`2` = False.  In Python, each clause is
 most conveniently represented as a list of integers.  Naturally, it makes
 sense to represent each solution also as a list of integers, where the sign
-corresponds to the boolean value (+ for True and - for False) and the
+corresponds to the Boolean value (+ for True and - for False) and the
 absolute value corresponds to i\ :sup:`th` variable::
 
    >>> import pycosat
@@ -113,4 +113,4 @@ This implementation has several problems.  Firstly, it is quite slow as
 again.  Secondly, after calling ``py_itersolve`` the list of clauses will
 be modified.  In pycosat, ``itersolve`` is implemented on the C level,
 making use of the picosat C interface (which makes it much, much faster
-than the Python implementation above).
+than the naive Python implementation above).
