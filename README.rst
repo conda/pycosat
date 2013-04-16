@@ -15,8 +15,8 @@ Usage
 -----
 
 The ``pycosat`` module has two functions ``solve`` and ``itersolve``,
-with both take a list of clauses as an argument.  Each clause is itself
-represented as a list of (non-zero) integers.
+with both take a list or iterable of clauses as an argument.
+Each clause is itself represented as a list of (non-zero) integers.
 
 The function ``solve`` returns one of the following:
   * one solution (a list of integers)
