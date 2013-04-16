@@ -1,3 +1,9 @@
+2013-04-XX   0.6.0:
+-------------------
+  * add ability to specify clauses as objects which support the iterator
+    protocol
+
+
 2013-04-09   0.5.0:
 -------------------
   * add Python 2.5 support
