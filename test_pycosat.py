@@ -109,6 +109,15 @@ class TestSolve(unittest.TestCase):
             cls = [[long(lit) for lit in clause] for clause in clauses1]
             self.assertEqual(solve(cls), [1, -2, -3, -4, 5])
 
+    def test_iter_clauses(self):
+        self.assertEqual(solve(iter(clauses1)), [1, -2, -3, -4, 5])
+
+    def test_gen_clauses(self):
+        def gen_clauses():
+            for clause in clauses1:
+                yield clause
+        self.assertEqual(solve(gen_clauses()), [1, -2, -3, -4, 5])
+
     def test_cnf2(self):
         self.assertEqual(solve(clauses2), "UNSAT")
 

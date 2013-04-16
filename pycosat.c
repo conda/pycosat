@@ -109,22 +109,37 @@ static int add_clause(PicoSAT *picosat, PyObject *clause)
 static int add_clauses(PicoSAT *picosat, PyObject *clauses)
 {
     PyObject *item;             /* each clause is a list of intergers */
-    Py_ssize_t n, i;
 
-    if (!PyList_Check(clauses)) {
-        PyErr_SetString(PyExc_TypeError, "list expected");
-        return -1;
+    if (PyIter_Check(clauses)) {
+        while ((item = PyIter_Next(clauses)) != NULL) {
+            if (add_clause(picosat, item) < 0) {
+                Py_DECREF(item);
+                return -1;
+            }
+            Py_DECREF(item);
+        }
+        if (PyErr_Occurred())
+            return -1;
+
+        return 0;
     }
 
-    n = PyList_Size(clauses);
-    for (i = 0; i < n; i++) {
-        item = PyList_GetItem(clauses, i);
-        if (item == NULL)
-            return -1;
-        if (add_clause(picosat, item) < 0)
-            return -1;
+    if (PyList_Check(clauses)) {
+        Py_ssize_t n, i;
+
+        n = PyList_Size(clauses);
+        for (i = 0; i < n; i++) {
+            item = PyList_GetItem(clauses, i);
+            if (item == NULL)
+                return -1;
+            if (add_clause(picosat, item) < 0)
+                return -1;
+        }
+        return 0;
     }
-    return 0;
+
+    PyErr_SetString(PyExc_TypeError, "iterable or list expected");
+    return -1;
 }
 
 static PicoSAT* setup_picosat(PyObject *args, PyObject *kwds)
