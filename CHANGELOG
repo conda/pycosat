@@ -1,7 +1,9 @@
-2013-04-XX   0.6.0:
+2013-04-16   0.6.0:
 -------------------
   * add ability to specify clauses as objects which support the iterator
     protocol
+  * added a Python 3 version of the 8 queens example which demonstrates
+    the usefulness of the "yield from" statement
 
 
 2013-04-09   0.5.0:
