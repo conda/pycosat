@@ -110,6 +110,13 @@ void picosat_set_prefix (PicoSAT *, const char *);
  */
 void picosat_set_verbosity (PicoSAT *, int new_verbosity_level);
 
+/* Disable/Enable all pre-processing, currently only failed literal probing.
+ *
+ *  new_plain_value != 0    only 'plain' solving, so no preprocessing
+ *  new_plain_value == 0    allow preprocessing
+ */
+void picosat_set_plain (PicoSAT *, int new_plain_value);
+
 /* Set default initial phase: 
  *
  *   0 = false
@@ -299,7 +306,7 @@ int picosat_add (PicoSAT *, int lit);
  * terminated with a zero literal.  Literals beyond the first zero literal
  * are discarded.
  */
-int picosat_add_arg (PicoSAT *, int lit, ...);
+int picosat_add_arg (PicoSAT *, ...);
 
 /* As the previous function but with an at compile time unknown size.
  */
@@ -434,10 +441,10 @@ int picosat_deref_toplevel (PicoSAT *, int lit);
 
 /* After 'picosat_sat' was called and returned 'PICOSAT_SATISFIABLE' a
  * partial satisfying assignment can be obtained as well.  It satisfies all
- * original clauses literals.  The value of the literal is return as '1' for
- * 'true',  '-1' for 'false' and '0' for an unknown value.  In order to make
- * this work all original clauses have to be saved internally, which has to
- * be enabled by 'picosat_save_original_clauses'.
+ * original clauses.  The value of the literal is return as '1' for 'true',
+ * '-1' for 'false' and '0' for an unknown value.  In order to make this
+ * work all original clauses have to be saved internally, which has to be
+ * enabled by 'picosat_save_original_clauses' right after initialization.
  */
 int picosat_deref_partial (PicoSAT *, int lit);
 

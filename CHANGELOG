@@ -1,3 +1,8 @@
+2013-XX-XX   0.6.1:
+-------------------
+  * update picosat from 954 to 957
+
+
 2013-04-16   0.6.0:
 -------------------
   * add ability to specify clauses as objects which support the iterator
