@@ -328,7 +328,7 @@ static int soliter_traverse(soliterobject *it, visitproc visit, void *arg)
 
 static PyTypeObject SolIter_Type = {
 #ifdef IS_PY3K
-    PyVarObject_HEAD_INIT(&SolIter_Type, 0)
+    PyVarObject_HEAD_INIT(NULL, 0)
 #else
     PyObject_HEAD_INIT(NULL)
     0,                                        /* ob_size */
@@ -391,6 +391,9 @@ PyMODINIT_FUNC initpycosat(void)
 #endif
 {
     PyObject *m;
+
+    if (PyType_Ready(&SolIter_Type) < 0)
+        return NULL;
 
 #ifdef IS_PY3K
     m = PyModule_Create(&moduledef);
