@@ -143,11 +143,11 @@ tests.append(TestSolve)
 class TestIterSolve(unittest.TestCase):
 
     def test_wrong_args(self):
-        self.assertRaises(TypeError, solve, [[1, 2], [-3]], 'A')
-        self.assertRaises(TypeError, solve, {})
-        self.assertRaises(TypeError, solve, ['a'])
-        self.assertRaises(TypeError, solve, [[1, 2], [3, None]], 5)
-        self.assertRaises(ValueError, solve, [[1, 2], [3, 0]])
+        self.assertRaises(TypeError, itersolve, [[1, 2], [-3]], 'A')
+        self.assertRaises(TypeError, itersolve, {})
+        self.assertRaises(TypeError, itersolve, ['a'])
+        self.assertRaises(TypeError, itersolve, [[1, 2], [3, None]], 5)
+        self.assertRaises(ValueError, itersolve, [[1, 2], [3, 0]])
 
     def test_no_clauses(self):
         for n in range(7):
