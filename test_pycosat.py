@@ -115,7 +115,7 @@ class TestSolve(unittest.TestCase):
         self.assertEqual(solve(iter(clauses1)), [1, -2, -3, -4, 5])
 
     def test_tuple_caluses(self):
-        self.assertEqual(solve(tuple(clauses1)),  [1, -2, -3, -4, 5])
+        self.assertEqual(solve(tuple(clauses1)), [1, -2, -3, -4, 5])
 
     def test_gen_clauses(self):
         def gen_clauses():
