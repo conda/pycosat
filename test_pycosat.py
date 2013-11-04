@@ -135,6 +135,11 @@ class TestSolve(unittest.TestCase):
         self.assertEqual(solve([(x for x in clause) for clause in clauses1]),
                          [1, -2, -3, -4, 5])
 
+    def test_bad_iter(self):
+        class Liar:
+            def __iter__(self): return None
+        self.assertRaises(TypeError, solve, Liar())
+
     def test_cnf2(self):
         self.assertEqual(solve(clauses2), "UNSAT")
 
