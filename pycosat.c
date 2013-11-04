@@ -113,7 +113,6 @@ static int add_clauses(PicoSAT *picosat, PyObject *clauses)
 
     iterator = PyObject_GetIter(clauses);
     if (iterator == NULL) {
-        PyErr_SetString(PyExc_TypeError, "clauses must be iterable");
         return -1;
     }
     while ((item = PyIter_Next(iterator)) != NULL) {
