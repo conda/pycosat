@@ -2,6 +2,8 @@
 -------------------
   * fix the initialization of the soliterator type in Py3k, thanks bfroehle
   * update picosat from 954 to 957
+  * add ability of solve and itersolve to take general iterables as clauses
+    argument
 
 
 2013-04-16   0.6.0:
