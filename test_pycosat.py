@@ -177,6 +177,39 @@ class TestIterSolve(unittest.TestCase):
         for n in range(7):
             self.assertEqual(len(list(itersolve([], vars=n))), 2 ** n)
 
+    def test_iter_clauses(self):
+        self.assertTrue(all(evaluate(clauses1, sol) for sol in
+                            itersolve(iter(clauses1))))
+
+    def test_each_clause_iter(self):
+        self.assertTrue(all(evaluate(clauses1, sol) for sol in
+                            itersolve([iter(clause) for clause in clauses1])))
+
+    def test_tuple_caluses(self):
+        self.assertTrue(all(evaluate(clauses1, sol) for sol in
+                            itersolve(tuple(clauses1))))
+
+    def test_each_clause_tuples(self):
+        self.assertTrue(all(evaluate(clauses1, sol) for sol in
+                            itersolve([tuple(clause) for clause in clauses1])))
+
+    def test_gen_clauses(self):
+        def gen_clauses():
+            for clause in clauses1:
+                yield clause
+        self.assertTrue(all(evaluate(clauses1, sol) for sol in
+                            itersolve(gen_clauses())))
+
+    def test_each_clause_gen(self):
+        self.assertTrue(all(evaluate(clauses1, sol) for sol in
+                            itersolve([(x for x in clause) for clause in
+                                       clauses1])))
+
+    def test_bad_iter(self):
+        class Liar:
+            def __iter__(self): return None
+        self.assertRaises(TypeError, itersolve, Liar())
+
     def test_cnf1(self):
         for sol in itersolve(clauses1, nvars1):
             #sys.stderr.write('%r\n' % repr(sol))
