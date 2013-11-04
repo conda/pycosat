@@ -392,14 +392,15 @@ PyMODINIT_FUNC initpycosat(void)
 {
     PyObject *m;
 
+#ifdef IS_PY3K
     if (PyType_Ready(&SolIter_Type) < 0)
         return NULL;
-
-#ifdef IS_PY3K
     m = PyModule_Create(&moduledef);
     if (m == NULL)
         return NULL;
 #else
+    if (PyType_Ready(&SolIter_Type) < 0)
+        return;
     m = Py_InitModule3("pycosat", module_functions, module_doc);
     if (m == NULL)
         return;
