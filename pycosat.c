@@ -77,39 +77,42 @@ static int blocksol(PicoSAT *picosat, signed char *mem)
 
 static int add_clause(PicoSAT *picosat, PyObject *clause)
 {
+    PyObject *iterator;         /* each clause is an iterable of literals */
     PyObject *lit;              /* the literals are integers */
-    Py_ssize_t n, i;
     int v;
 
-    if (!PyList_Check(clause)) {
-        PyErr_SetString(PyExc_TypeError, "list expected");
+    iterator = PyObject_GetIter(clause);
+    if (iterator == NULL) {
         return -1;
     }
 
-    n = PyList_Size(clause);
-    for (i = 0; i < n; i++) {
-        lit = PyList_GetItem(clause, i);
-        if (lit == NULL)
-            return -1;
+    while ((lit = PyIter_Next(iterator)) != NULL) {
         if (!IS_INT(lit))  {
+            Py_DECREF(lit);
+            Py_DECREF(iterator);
             PyErr_SetString(PyExc_TypeError, "integer expected");
             return -1;
         }
         v = PyLong_AsLong(lit);
+        Py_DECREF(lit);
         if (v == 0) {
+            Py_DECREF(iterator);
             PyErr_SetString(PyExc_ValueError, "non-zero integer expected");
             return -1;
         }
         picosat_add(picosat, v);
     }
+    Py_DECREF(iterator);
+    if (PyErr_Occurred())
+        return -1;
     picosat_add(picosat, 0);
     return 0;
 }
 
 static int add_clauses(PicoSAT *picosat, PyObject *clauses)
 {
-    PyObject *iterator;             /* clauses can be any iterable */
-    PyObject *item;                 /* each clause is a list of intergers */
+    PyObject *iterator;            /* clauses can be any iterable */
+    PyObject *item;                /* each clause is an iterable of intergers */
 
     iterator = PyObject_GetIter(clauses);
     if (iterator == NULL) {

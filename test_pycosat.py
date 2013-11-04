@@ -114,14 +114,26 @@ class TestSolve(unittest.TestCase):
     def test_iter_clauses(self):
         self.assertEqual(solve(iter(clauses1)), [1, -2, -3, -4, 5])
 
+    def test_each_clause_iter(self):
+        self.assertEqual(solve([iter(clause) for clause in clauses1]),
+                         [1, -2, -3, -4, 5])
+
     def test_tuple_caluses(self):
         self.assertEqual(solve(tuple(clauses1)), [1, -2, -3, -4, 5])
+
+    def test_each_clause_tuples(self):
+        self.assertEqual(solve([tuple(clause) for clause in clauses1]),
+                         [1, -2, -3, -4, 5])
 
     def test_gen_clauses(self):
         def gen_clauses():
             for clause in clauses1:
                 yield clause
         self.assertEqual(solve(gen_clauses()), [1, -2, -3, -4, 5])
+
+    def test_each_clause_gen(self):
+        self.assertEqual(solve([(x for x in clause) for clause in clauses1]),
+                         [1, -2, -3, -4, 5])
 
     def test_cnf2(self):
         self.assertEqual(solve(clauses2), "UNSAT")
