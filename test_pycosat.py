@@ -94,7 +94,9 @@ class TestSolve(unittest.TestCase):
 
     def test_wrong_args(self):
         self.assertRaises(TypeError, solve, [[1, 2], [-3]], 'A')
-        self.assertRaises(TypeError, solve, {})
+        self.assertRaises(TypeError, solve, 1)
+        self.assertRaises(TypeError, solve, 1.0)
+        self.assertRaises(TypeError, solve, object())
         self.assertRaises(TypeError, solve, ['a'])
         self.assertRaises(TypeError, solve, [[1, 2], [3, None]], 5)
         self.assertRaises(ValueError, solve, [[1, 2], [3, 0]])
@@ -112,11 +114,31 @@ class TestSolve(unittest.TestCase):
     def test_iter_clauses(self):
         self.assertEqual(solve(iter(clauses1)), [1, -2, -3, -4, 5])
 
+    def test_each_clause_iter(self):
+        self.assertEqual(solve([iter(clause) for clause in clauses1]),
+                         [1, -2, -3, -4, 5])
+
+    def test_tuple_caluses(self):
+        self.assertEqual(solve(tuple(clauses1)), [1, -2, -3, -4, 5])
+
+    def test_each_clause_tuples(self):
+        self.assertEqual(solve([tuple(clause) for clause in clauses1]),
+                         [1, -2, -3, -4, 5])
+
     def test_gen_clauses(self):
         def gen_clauses():
             for clause in clauses1:
                 yield clause
         self.assertEqual(solve(gen_clauses()), [1, -2, -3, -4, 5])
+
+    def test_each_clause_gen(self):
+        self.assertEqual(solve([(x for x in clause) for clause in clauses1]),
+                         [1, -2, -3, -4, 5])
+
+    def test_bad_iter(self):
+        class Liar:
+            def __iter__(self): return None
+        self.assertRaises(TypeError, solve, Liar())
 
     def test_cnf2(self):
         self.assertEqual(solve(clauses2), "UNSAT")
@@ -143,15 +165,50 @@ tests.append(TestSolve)
 class TestIterSolve(unittest.TestCase):
 
     def test_wrong_args(self):
-        self.assertRaises(TypeError, solve, [[1, 2], [-3]], 'A')
-        self.assertRaises(TypeError, solve, {})
-        self.assertRaises(TypeError, solve, ['a'])
-        self.assertRaises(TypeError, solve, [[1, 2], [3, None]], 5)
-        self.assertRaises(ValueError, solve, [[1, 2], [3, 0]])
+        self.assertRaises(TypeError, itersolve, [[1, 2], [-3]], 'A')
+        self.assertRaises(TypeError, itersolve, 1)
+        self.assertRaises(TypeError, itersolve, 1.0)
+        self.assertRaises(TypeError, itersolve, object())
+        self.assertRaises(TypeError, itersolve, ['a'])
+        self.assertRaises(TypeError, itersolve, [[1, 2], [3, None]], 5)
+        self.assertRaises(ValueError, itersolve, [[1, 2], [3, 0]])
 
     def test_no_clauses(self):
         for n in range(7):
             self.assertEqual(len(list(itersolve([], vars=n))), 2 ** n)
+
+    def test_iter_clauses(self):
+        self.assertTrue(all(evaluate(clauses1, sol) for sol in
+                            itersolve(iter(clauses1))))
+
+    def test_each_clause_iter(self):
+        self.assertTrue(all(evaluate(clauses1, sol) for sol in
+                            itersolve([iter(clause) for clause in clauses1])))
+
+    def test_tuple_caluses(self):
+        self.assertTrue(all(evaluate(clauses1, sol) for sol in
+                            itersolve(tuple(clauses1))))
+
+    def test_each_clause_tuples(self):
+        self.assertTrue(all(evaluate(clauses1, sol) for sol in
+                            itersolve([tuple(clause) for clause in clauses1])))
+
+    def test_gen_clauses(self):
+        def gen_clauses():
+            for clause in clauses1:
+                yield clause
+        self.assertTrue(all(evaluate(clauses1, sol) for sol in
+                            itersolve(gen_clauses())))
+
+    def test_each_clause_gen(self):
+        self.assertTrue(all(evaluate(clauses1, sol) for sol in
+                            itersolve([(x for x in clause) for clause in
+                                       clauses1])))
+
+    def test_bad_iter(self):
+        class Liar:
+            def __iter__(self): return None
+        self.assertRaises(TypeError, itersolve, Liar())
 
     def test_cnf1(self):
         for sol in itersolve(clauses1, nvars1):
