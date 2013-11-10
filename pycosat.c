@@ -82,9 +82,8 @@ static int add_clause(PicoSAT *picosat, PyObject *clause)
     int v;
 
     iterator = PyObject_GetIter(clause);
-    if (iterator == NULL) {
+    if (iterator == NULL)
         return -1;
-    }
 
     while ((lit = PyIter_Next(iterator)) != NULL) {
         if (!IS_INT(lit))  {
@@ -111,13 +110,13 @@ static int add_clause(PicoSAT *picosat, PyObject *clause)
 
 static int add_clauses(PicoSAT *picosat, PyObject *clauses)
 {
-    PyObject *iterator;            /* clauses can be any iterable */
-    PyObject *item;                /* each clause is an iterable of intergers */
+    PyObject *iterator;       /* clauses can be any iterable */
+    PyObject *item;           /* each clause is an iterable of intergers */
 
     iterator = PyObject_GetIter(clauses);
-    if (iterator == NULL) {
+    if (iterator == NULL)
         return -1;
-    }
+
     while ((item = PyIter_Next(iterator)) != NULL) {
         if (add_clause(picosat, item) < 0) {
             Py_DECREF(item);
@@ -135,7 +134,7 @@ static int add_clauses(PicoSAT *picosat, PyObject *clauses)
 static PicoSAT* setup_picosat(PyObject *args, PyObject *kwds)
 {
     PicoSAT *picosat;
-    PyObject *clauses;          /* list of clauses */
+    PyObject *clauses;          /* iterable of clauses */
     int vars = -1, verbose = 0;
     unsigned long long prop_limit = 0;
     static char* kwlist[] = {"clauses",
