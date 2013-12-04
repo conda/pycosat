@@ -94,7 +94,6 @@ class TestSolve(unittest.TestCase):
 
     def test_wrong_args(self):
         self.assertRaises(TypeError, solve, [[1, 2], [-3]], 'A')
-        self.assertRaises(TypeError, solve, {})
         self.assertRaises(TypeError, solve, 1)
         self.assertRaises(TypeError, solve, 1.0)
         self.assertRaises(TypeError, solve, object())
@@ -167,7 +166,6 @@ class TestIterSolve(unittest.TestCase):
 
     def test_wrong_args(self):
         self.assertRaises(TypeError, itersolve, [[1, 2], [-3]], 'A')
-        self.assertRaises(TypeError, itersolve, {})
         self.assertRaises(TypeError, itersolve, 1)
         self.assertRaises(TypeError, itersolve, 1.0)
         self.assertRaises(TypeError, itersolve, object())

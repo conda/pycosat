@@ -113,11 +113,6 @@ static int add_clauses(PicoSAT *picosat, PyObject *clauses)
     PyObject *iterator;       /* clauses can be any iterable */
     PyObject *item;           /* each clause is an iterable of intergers */
 
-    if (PyDict_Check(clauses)) {
-        PyErr_SetString(PyExc_TypeError, "did not expect dict");
-        return -1;
-    }
-
     iterator = PyObject_GetIter(clauses);
     if (iterator == NULL)
         return -1;
