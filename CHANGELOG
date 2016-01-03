@@ -1,3 +1,7 @@
+  * fix some typos
+  * add official Python 3.5 support
+
+
 2014-04-28   0.6.1:
 -------------------
   * fix the initialization of the soliterator type in Py3k, thanks bfroehle
