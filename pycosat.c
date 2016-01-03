@@ -111,7 +111,7 @@ static int add_clause(PicoSAT *picosat, PyObject *clause)
 static int add_clauses(PicoSAT *picosat, PyObject *clauses)
 {
     PyObject *iterator;       /* clauses can be any iterable */
-    PyObject *item;           /* each clause is an iterable of intergers */
+    PyObject *item;           /* each clause is an iterable of integers */
 
     iterator = PyObject_GetIter(clauses);
     if (iterator == NULL)
@@ -261,7 +261,7 @@ static PyObject* itersolve(PyObject *self, PyObject *args, PyObject *kwds)
 }
 
 PyDoc_STRVAR(itersolve_doc,
-"itersolve(clauses [, kwargs]) -> interator\n\
+"itersolve(clauses [, kwargs]) -> iterator\n\
 \n\
 Solve the SAT problem for the clauses, and return an iterator over\n\
 the solutions (which are lists of integers).\n\
@@ -285,7 +285,7 @@ static PyObject* soliter_next(soliterobject *it)
             PyErr_SetString(PyExc_SystemError, "failed to create list");
             return NULL;
         }
-        /* add inverse solution to the clauses, for next interation */
+        /* add inverse solution to the clauses, for next iteration */
         if (blocksol(it->picosat, it->mem) < 0)
             return NULL;
         break;
@@ -369,7 +369,7 @@ pycosat: bindings to PicoSAT\n\
 There are two functions in this module, solve and itersolve.\n\
 Please see " PYCOSAT_URL " for more details.");
 
-/* initialization routine for the shared libary */
+/* initialization routine for the shared library */
 #ifdef IS_PY3K
 static PyModuleDef moduledef = {
     PyModuleDef_HEAD_INIT, "pycosat", module_doc, -1, module_functions,
