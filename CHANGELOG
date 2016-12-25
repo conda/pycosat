@@ -1,5 +1,7 @@
+2017-XX-XX   0.6.2:
+-------------------
   * fix some typos
-  * add official Python 3.5 support
+  * add official Python 3.5 and 3.6 support
 
 
 2014-04-28   0.6.1:
