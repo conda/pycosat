@@ -1,8 +1,12 @@
+import re
 import sys
 from distutils.core import setup, Extension
 
 
-version = '0.6.2'
+# Read version from pycosat.c
+pat = re.compile(r'#define\s+PYCOSAT_VERSION\s+"(\S+)"', re.M)
+data = open('pycosat.c').read()
+version = pat.search(data).group(1)
 
 
 ext_kwds = dict(
@@ -10,8 +14,7 @@ ext_kwds = dict(
     sources = ["pycosat.c"],
     define_macros = []
 )
-if sys.platform != 'win32':
-    ext_kwds['define_macros'].append(('PYCOSAT_VERSION', '"%s"' % version))
+
 if '--inplace' in sys.argv:
     ext_kwds['define_macros'].append(('DONT_INCLUDE_PICOSAT', 1))
     ext_kwds['library_dirs'] = ['.']

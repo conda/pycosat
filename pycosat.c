@@ -1,10 +1,11 @@
 /*
-  Copyright (c) 2013, Ilan Schnell, Continuum Analytics, Inc.
+  Copyright (c) 2013-2017, Ilan Schnell, Continuum Analytics, Inc.
   Python bindings to picosat (http://fmv.jku.at/picosat/)
   This file is published under the same license as picosat itself, which
   uses an MIT style license.
 */
 #define PYCOSAT_URL  "https://pypi.python.org/pypi/pycosat"
+#define PYCOSAT_VERSION  "0.6.2"
 
 #include <Python.h>
 
@@ -395,10 +396,8 @@ PyMODINIT_FUNC initpycosat(void)
         return;
 #endif
 
-#ifdef PYCOSAT_VERSION
     PyModule_AddObject(m, "__version__",
                        PyUnicode_FromString(PYCOSAT_VERSION));
-#endif
 
 #ifdef IS_PY3K
     return m;
