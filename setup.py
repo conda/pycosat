@@ -26,7 +26,7 @@ setup(
     url = "https://github.com/ContinuumIO/pycosat",
     license = "MIT",
     classifiers = [
-        "Development Status :: 4 - Beta",
+        "Development Status :: 6 - Mature",
         "Intended Audience :: Developers",
         "Operating System :: OS Independent",
         "Programming Language :: C",
