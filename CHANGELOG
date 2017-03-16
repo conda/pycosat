@@ -1,7 +1,8 @@
-2017-XX-XX   0.6.2:
+2017-03-XX   0.6.2:
 -------------------
   * fix some typos
   * add official Python 3.5 and 3.6 support
+  * update picosat to 965
 
 
 2014-04-28   0.6.1:
