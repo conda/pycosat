@@ -19,6 +19,16 @@
 #include "picosat.c"
 #endif
 
+/* When defined, picosat uses the Python memory manager
+   We cannot do this while we:
+   "release GIL during main picosat computation"
+   https://github.com/ContinuumIO/pycosat/commit/f50c89a10db2e87c3e6b896c43ce0549f92039d0
+   I am assuming here that we would rather release the GIL than use the Python mem allocation
+   though there is no comments to explain the trade-offs between the Python vs libc allocators
+*/
+/* #define WITH_PYMEM */
+
+
 #if PY_MAJOR_VERSION >= 3
 #define IS_PY3K
 #endif
@@ -34,6 +44,7 @@
 #define PyUnicode_FromString  PyString_FromString
 #endif
 
+#if defined(WITH_PYMEM)
 /* the following three adapter functions are used as arguments to
    picosat_minit, such that picosat used the Python memory manager */
 inline static void *py_malloc(void *mmgr, size_t bytes)
@@ -50,6 +61,7 @@ inline static void py_free(void *mmgr, void *ptr, size_t bytes)
 {
     PyMem_Free(ptr);
 }
+#endif
 
 /* Add the inverse of the (current) solution to the clauses.
    This function is essentially the same as the function blocksol in app.c
@@ -146,7 +158,11 @@ static PicoSAT* setup_picosat(PyObject *args, PyObject *kwds)
                                      &vars, &verbose, &prop_limit))
         return NULL;
 
+#if defined(WITH_PYMEM)
     picosat = picosat_minit(NULL, py_malloc, py_realloc, py_free);
+#else
+    picosat = picosat_init();
+#endif
     picosat_set_verbosity(picosat, verbose);
     if (vars != -1)
         picosat_adjust(picosat, vars);
