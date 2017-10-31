@@ -1,3 +1,8 @@
+2017-10-29   0.6.3:
+-------------------
+  * Revert 'always use Python memory manager'
+
+
 2017-03-16   0.6.2:
 -------------------
   * update picosat to 965
