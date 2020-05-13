@@ -8147,7 +8147,11 @@ picosat_stats (PS * ps)
 #ifndef NGETRUSAGE
 #include <sys/time.h>
 #include <sys/resource.h>
+#if defined(__PASE__)
+#include <unistd.h>
+#else
 #include <sys/unistd.h>
+#endif
 #endif
 
 double
