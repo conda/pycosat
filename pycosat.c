@@ -66,23 +66,23 @@ inline static void py_free(void *mmgr, void *ptr, size_t bytes)
 /* Add the inverse of the (current) solution to the clauses.
    This function is essentially the same as the function blocksol in app.c
    in the picosat source. */
-static int blocksol(PicoSAT *picosat, signed char *mem)
+static int blocksol(PicoSAT *picosat, signed char **mem)
 {
     int max_idx, i;
 
     max_idx = picosat_variables(picosat);
-    if (mem == NULL) {
-        mem = PyMem_Malloc(max_idx + 1);
-        if (mem == NULL) {
+    if (*mem == NULL) {
+        *mem = PyMem_Malloc(max_idx + 1);
+        if (*mem == NULL) {
             PyErr_NoMemory();
             return -1;
         }
     }
     for (i = 1; i <= max_idx; i++)
-        mem[i] = (picosat_deref(picosat, i) > 0) ? 1 : -1;
+        (*mem)[i] = (picosat_deref(picosat, i) > 0) ? 1 : -1;
 
     for (i = 1; i <= max_idx; i++)
-        picosat_add(picosat, (mem[i] < 0) ? i : -i);
+        picosat_add(picosat, ((*mem)[i] < 0) ? i : -i);
 
     picosat_add(picosat, 0);
     return 0;
@@ -303,7 +303,7 @@ static PyObject* soliter_next(soliterobject *it)
             return NULL;
         }
         /* add inverse solution to the clauses, for next iteration */
-        if (blocksol(it->picosat, it->mem) < 0)
+        if (blocksol(it->picosat, &it->mem) < 0)
             return NULL;
         break;
 
