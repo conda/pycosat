@@ -525,6 +525,7 @@ struct PicoSAT
   FILE *out;
   char * prefix;
   int verbosity;
+  int minimallity;
   int plain;
   unsigned LEVEL;
   unsigned max_var;
@@ -6773,6 +6774,13 @@ picosat_set_verbosity (PS * ps, int new_verbosity_level)
 {
   check_ready (ps);
   ps->verbosity = new_verbosity_level;
+}
+
+void
+picosat_set_minimallity (PS * ps, int new_minimallity_level)
+{
+  check_ready (ps);
+  ps->minimallity = new_minimallity_level;
 }
 
 void

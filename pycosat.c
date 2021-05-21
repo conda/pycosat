@@ -81,8 +81,19 @@ static int blocksol(PicoSAT *picosat, signed char *mem)
     for (i = 1; i <= max_idx; i++)
         mem[i] = (picosat_deref(picosat, i) > 0) ? 1 : -1;
 
-    for (i = 1; i <= max_idx; i++)
-        picosat_add(picosat, (mem[i] < 0) ? i : -i);
+    if (picosat->minimallity == 1) {
+        for (i = 1; i <= max_idx; i++)
+            if (mem[i] >= 0) {
+                picosat_add(picosat, -i);
+            }
+        }
+    else
+        {
+            for (i = 1; i <= max_idx; i++)
+                picosat_add(picosat, (mem[i] < 0) ? i : -i);
+        }
+
+
 
     picosat_add(picosat, 0);
     return 0;
@@ -148,14 +159,12 @@ static PicoSAT* setup_picosat(PyObject *args, PyObject *kwds)
 {
     PicoSAT *picosat;
     PyObject *clauses;          /* iterable of clauses */
-    int vars = -1, verbose = 0;
+    int vars = -1, verbose = 0, minimal = 0;
     unsigned long long prop_limit = 0;
-    static char* kwlist[] = {"clauses",
-                             "vars", "verbose", "prop_limit", NULL};
+    static char* kwlist[] = {"clauses", "vars", "verbose", "minimal", "prop_limit", NULL};
 
-    if (!PyArg_ParseTupleAndKeywords(args, kwds, "O|iiK:(iter)solve", kwlist,
-                                     &clauses,
-                                     &vars, &verbose, &prop_limit))
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, "O|iiiK:(iter)solve", kwlist,
+                                     &clauses, &vars, &verbose, &minimal, &prop_limit))
         return NULL;
 
 #if defined(WITH_PYMEM)
@@ -164,6 +173,8 @@ static PicoSAT* setup_picosat(PyObject *args, PyObject *kwds)
     picosat = picosat_init();
 #endif
     picosat_set_verbosity(picosat, verbose);
+    picosat_set_minimallity(picosat, minimal);
+
     if (vars != -1)
         picosat_adjust(picosat, vars);
 
@@ -177,6 +188,9 @@ static PicoSAT* setup_picosat(PyObject *args, PyObject *kwds)
 
     if (verbose >= 2)
         picosat_print(picosat, stdout);
+
+    if (minimal)
+        picosat_set_global_default_phase(picosat, 1); /* 1 is the NEGPHASE */
 
     return picosat;
 }

@@ -111,6 +111,12 @@ void picosat_set_prefix (PicoSAT *, const char *);
  */
 void picosat_set_verbosity (PicoSAT *, int new_verbosity_level);
 
+/* Set minimallity level.  A minimallity level of 1 
+Means that non minimal solutions will be skipped.
+There is no guarantee that all solutions returned are minimal
+ */
+void picosat_set_minimallity (PicoSAT *, int new_minimallity_level);
+
 /* Disable/Enable all pre-processing, currently only failed literal probing.
  *
  *  new_plain_value != 0    only 'plain' solving, so no preprocessing
