@@ -70,6 +70,11 @@ static int blocksol(PicoSAT *picosat, signed char *mem)
 {
     int max_idx, i;
 
+    if (mem == NULL) {
+        // caller must allocate picosat_variables(it->picosat) + 1 bytes
+        return -1;
+    }
+
     max_idx = picosat_variables(picosat);
 
     for (i = 1; i <= max_idx; i++)
