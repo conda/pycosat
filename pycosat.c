@@ -271,7 +271,12 @@ static PyObject* itersolve(PyObject *self, PyObject *args, PyObject *kwds)
     if (it->picosat == NULL)
         return NULL;
 
-    it->mem = NULL;
+    it->mem = PyMem_Malloc(picosat_variables(it->picosat) + 1);
+    if (it->mem == NULL) {
+        PyErr_NoMemory();
+        return NULL;
+    }
+
     PyObject_GC_Track(it);
     return (PyObject *) it;
 }
@@ -300,13 +305,6 @@ static PyObject* soliter_next(soliterobject *it)
         if (result == NULL) {
             PyErr_SetString(PyExc_SystemError, "failed to create list");
             return NULL;
-        }
-        if (it->mem == NULL) {
-            it->mem = PyMem_Malloc(picosat_variables(it->picosat) + 1);
-            if (it->mem == NULL) {
-                PyErr_NoMemory();
-                return NULL;
-            }
         }
         /* add inverse solution to the clauses, for next iteration */
         if (blocksol(it->picosat, it->mem) < 0)
