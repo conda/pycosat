@@ -70,14 +70,13 @@ static int blocksol(PicoSAT *picosat, signed char *mem)
 {
     int max_idx, i;
 
-    max_idx = picosat_variables(picosat);
     if (mem == NULL) {
-        mem = PyMem_Malloc(max_idx + 1);
-        if (mem == NULL) {
-            PyErr_NoMemory();
-            return -1;
-        }
+        // caller must allocate picosat_variables(it->picosat) + 1 bytes
+        return -1;
     }
+
+    max_idx = picosat_variables(picosat);
+
     for (i = 1; i <= max_idx; i++)
         mem[i] = (picosat_deref(picosat, i) > 0) ? 1 : -1;
 
@@ -272,7 +271,12 @@ static PyObject* itersolve(PyObject *self, PyObject *args, PyObject *kwds)
     if (it->picosat == NULL)
         return NULL;
 
-    it->mem = NULL;
+    it->mem = PyMem_Malloc(picosat_variables(it->picosat) + 1);
+    if (it->mem == NULL) {
+        PyErr_NoMemory();
+        return NULL;
+    }
+
     PyObject_GC_Track(it);
     return (PyObject *) it;
 }
