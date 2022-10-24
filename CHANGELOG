@@ -1,3 +1,8 @@
+2022-10-24   0.6.4:
+-------------------
+  * Fix memory leak in blocksol() when iterating over solutions
+
+
 2017-10-29   0.6.3:
 -------------------
   * Revert 'always use Python memory manager'
