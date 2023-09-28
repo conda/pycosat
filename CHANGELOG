@@ -1,5 +1,5 @@
-Next:
------
+2022-09      0.6.5:
+-------------------
   * Update Python version support
   * Use PyMem_Calloc() to initialize memory to 0.
 
