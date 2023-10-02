@@ -13,7 +13,7 @@
 ### Contributors
 
 * @conda-bot
-* @dholth
+* @dholth made their first contribution in https://github.com/conda/pycosat/pull/54
 * @kenodegard
 
 
