@@ -1,5 +1,23 @@
 [//]: # (current developments)
 
+## 0.6.5 (2023-10-02)
+
+### Enhancements
+
+* Update Python version support. (#56)
+
+### Bug fixes
+
+* Use `PyMem_Calloc()` to initialize memory to `0`. (#58)
+
+### Contributors
+
+* @conda-bot
+* @dholth
+* @kenodegard
+
+
+
 ## 0.6.4 (2022-10-24)
 
 * Fix memory leak in blocksol() when iterating over solutions
