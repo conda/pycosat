@@ -1,0 +1,43 @@
+- name: Aaron Meurer
+  email: asmeurer@gmail.com
+  github: asmeurer
+- name: Jannis Leidel
+  email: jannis@leidel.info
+  github: jezdez
+- name: Conda Bot
+  email: 18747875+conda-bot@users.noreply.github.com
+  github: conda-bot
+  aliases:
+  - conda-bot
+  - conda bot
+  alternate_emails:
+  - ad-team+condabot@anaconda.com
+  - conda-bot@users.noreply.github.com
+  - 18747875+conda-bot@users.noreply.github.com
+- name: Ken Odegard
+  email: kodegard@anaconda.com
+  github: kenodegard
+- name: Daniel Holth
+  email: dholth@anaconda.com
+  github: dholth
+- name: Ilan Schnell
+  email: ilanschnell@gmail.com
+  github: ilanschnell
+- name: William Schwartz
+  email: wkschwartz@gmail.com
+  github: wkschwartz
+- name: Ray Donnelly
+  email: mingw.android@gmail.com
+  github: mingwandroid
+- name: Bradley M. Froehle
+  email: brad.froehle@gmail.com
+  github: bfroehle
+- name: Mike Sarahan
+  email: msarahan@gmail.com
+  github: msarahan
+- name: Ondřej Čertík
+  email: ondrej.certik@gmail.com
+  github: certik
+- name: Travis E. Oliphant
+  email: teoliphant@gmail.com
+  github: teoliphant
