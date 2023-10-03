@@ -5,7 +5,7 @@
   uses an MIT style license.
 */
 #define PYCOSAT_URL  "https://pypi.python.org/pypi/pycosat"
-#define PYCOSAT_VERSION  "0.6.5"
+#define PYCOSAT_VERSION  "0.6.6"
 
 #include <Python.h>
 
