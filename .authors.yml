@@ -1,0 +1,67 @@
+- name: Aaron Meurer
+  email: asmeurer@gmail.com
+  github: asmeurer
+  num_commits: 1
+  first_commit: 2014-02-19 16:17:41
+- name: Jannis Leidel
+  email: jannis@leidel.info
+  github: jezdez
+  num_commits: 0
+  first_commit: 2022-06-28 05:35:02
+- name: Conda Bot
+  email: 18747875+conda-bot@users.noreply.github.com
+  github: conda-bot
+  aliases:
+  - conda-bot
+  - conda bot
+  alternate_emails:
+  - ad-team+condabot@anaconda.com
+  - conda-bot@users.noreply.github.com
+  - 18747875+conda-bot@users.noreply.github.com
+  num_commits: 22
+  first_commit: 2022-01-25 16:00:27
+- name: Ken Odegard
+  email: kodegard@anaconda.com
+  github: kenodegard
+  num_commits: 5
+  first_commit: 2022-06-15 14:15:32
+- name: Daniel Holth
+  email: dholth@anaconda.com
+  github: dholth
+  num_commits: 7
+  first_commit: 2022-10-14 14:44:28
+- name: Ilan Schnell
+  email: ilanschnell@gmail.com
+  github: ilanschnell
+  num_commits: 155
+  first_commit: 2013-03-23 22:44:55
+- name: William Schwartz
+  email: wkschwartz@gmail.com
+  github: wkschwartz
+  num_commits: 8
+  first_commit: 2013-11-04 15:35:43
+- name: Ray Donnelly
+  email: mingw.android@gmail.com
+  github: mingwandroid
+  num_commits: 2
+  first_commit: 2017-10-29 17:00:55
+- name: Bradley M. Froehle
+  email: brad.froehle@gmail.com
+  github: bfroehle
+  num_commits: 1
+  first_commit: 2013-05-27 18:40:21
+- name: Mike Sarahan
+  email: msarahan@gmail.com
+  github: msarahan
+  num_commits: 0
+  first_commit: 2017-10-30 19:02:20
+- name: Ondřej Čertík
+  email: ondrej.certik@gmail.com
+  github: certik
+  num_commits: 1
+  first_commit: 2013-03-28 21:20:51
+- name: Travis E. Oliphant
+  email: teoliphant@gmail.com
+  github: teoliphant
+  num_commits: 1
+  first_commit: 2013-03-26 00:19:31
