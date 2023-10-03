@@ -1,4 +1,4 @@
 include \
-    setup.h CHANGELOG CODE_OF_CONDUCT.md HOW_WE_USE_GITHUB.md LICENSE \
+    setup.h CHANGELOG.md CODE_OF_CONDUCT.md HOW_WE_USE_GITHUB.md LICENSE \
     Makefile README.rst picosat.c picosat.h pycosat.c test_pycosat.py
 graft examples/
