@@ -271,7 +271,7 @@ static PyObject* itersolve(PyObject *self, PyObject *args, PyObject *kwds)
     if (it->picosat == NULL)
         return NULL;
 
-    it->mem = PyMem_Calloc(picosat_variables(it->picosat) + 1);
+    it->mem = PyMem_Calloc(picosat_variables(it->picosat) + 1, 1);
     if (it->mem == NULL) {
         PyErr_NoMemory();
         return NULL;
