@@ -1,5 +1,18 @@
 [//]: # (current developments)
 
+## 0.6.6 (2023-10-03)
+
+### Bug fixes
+
+* Fix `PyMem_Calloc()` call signature. (#76)
+
+### Contributors
+
+* @dholth
+* @kenodegard
+
+
+
 ## 0.6.5 (2023-10-02)
 
 ### Enhancements
