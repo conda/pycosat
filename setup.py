@@ -22,7 +22,7 @@ setup(
     version=version,
     author="Ilan Schnell",
     author_email="ilan@continuum.io",
-    url="https://github.com/ContinuumIO/pycosat",
+    url="https://github.com/conda/pycosat",
     license="MIT",
     classifiers=[
         "Development Status :: 6 - Mature",
