@@ -8,6 +8,9 @@ pat = re.compile(r'#define\s+PYCOSAT_VERSION\s+"(\S+)"', re.M)
 data = open("pycosat.c").read()
 version = pat.search(data).group(1)
 
+cranko_version = "0.dev0" # cranko project-version
+
+assert version == cranko_version
 
 ext_kwds = dict(name="pycosat", sources=["pycosat.c"], define_macros=[])
 
@@ -15,7 +18,6 @@ if "--inplace" in sys.argv:
     ext_kwds["define_macros"].append(("DONT_INCLUDE_PICOSAT", 1))
     ext_kwds["library_dirs"] = ["."]
     ext_kwds["libraries"] = ["picosat"]
-
 
 setup(
     name="pycosat",
