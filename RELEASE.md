@@ -13,12 +13,12 @@
 # Release Process
 
 > [!NOTE]
-> Throughout this document are references to the version number as `MAJOR.MINOR.[$patch_number]`, this should be replaced with the correct version number. Do **not** prefix the version with a lowercase `v`.
+> Throughout this document are references to the version number as `MAJOR.MINOR.MINOR`, this should be replaced with the correct version number. Do **not** prefix the version with a lowercase `v`.
 
 ## 1. Open the release issue and cut a release branch. (do this ~1 week prior to release)
 
 > [!NOTE]
-> The new release branch should adhere to the naming convention of `MAJOR.MINOR.x` (make sure to put the `.x` at the end!). In the case of patch/hotfix releases, however, do NOT cut a new release branch; instead, use the previously-cut release branch with the appropriate `MAJOR.MINOR.x` version numbers.
+> The new release branch should adhere to the naming convention of `MAJOR.MINOR.x` (note the difference to `MAJOR.MINOR.MINOR`). In the case of patch/hotfix releases, however, do NOT cut a new release branch; instead, use the previously-cut `MAJOR.MINOR.x` release branch.
 
 Use the issue template below to create the release issue. After creating the release issue, pin it for easy access.
 
@@ -87,7 +87,7 @@ If a patch release is necessary, reopen the original release issue and append th
 
 ```markdown
 <details open>  <!-- feel free to remove the open attribute once this section is completed -->
-<summary><h4>Patch MAJOR.MINOR.[$patch_number]</h4></summary>
+<summary><h4>Patch MAJOR.MINOR.MINOR</h4></summary>
 
 - [ ] <!-- list issues & PRs that need to be resolved here -->
 - [ ] Create release PR (see [release process][process])
@@ -106,6 +106,9 @@ If a patch release is necessary, reopen the original release issue and append th
 > [!NOTE]
 > The [epic template][epic template] is perfect for this; remember to remove the **`epic`** label.
 
+> [!NOTE]
+> A patch release is like a regular, i.e., follow the same steps in the process as you would for a regular release. Most patches are authored by existing contributors (most likely maintainers themselves) so running `rever <VERSION>` may succeed on the first pass.
+
 ## 2. Alert various parties of the upcoming release. (do this ~1 week prior to release)
 
 Let various interested parties know about the upcoming release; at minimum, conda-forge maintainers should be informed. For major features, a blog post describing the new features should be prepared and posted once the release is completed (see the announcements section of the release issue).
@@ -114,7 +117,7 @@ Let various interested parties know about the upcoming release; at minimum, cond
 
 ### Canary Builds for Manual Testing
 
-Once the release PRs are filed, successful canary builds will be available on `https://anaconda.org/conda-canary/conda/files?channel=rc-pycosat-MAJOR.MINOR.x` for manual testing.
+Once the release PRs are filed, successful canary builds will be available on `https://anaconda.org/conda-canary/pycosat/files?channel=rc-pycosat-MAJOR.MINOR.x` for manual testing.
 
 > [!NOTE]
 > You do not need to apply the `build::review` label for release PRs; every commit to the release branch builds and uploads canary builds to the respective `rc-` label.
@@ -153,7 +156,7 @@ Currently, there are only 2 activities we use rever for, (1) aggregating the aut
 2. Create a versioned branch, this is where rever will make its changes:
 
     ```bash
-    (rever) $ git checkout -b changelog-MAJOR.MINOR.[$patch_number]
+    (rever) $ git checkout -b changelog-MAJOR.MINOR.MINOR
     ```
 
 2. Run `rever --activities authors <VERSION>`:
@@ -181,7 +184,7 @@ Currently, there are only 2 activities we use rever for, (1) aggregating the aut
     - Here's a sample run where we undo the commit made by rever in order to commit the changes to `.authors.yml` separately:
 
         ```bash
-        (rever) $ rever --activities authors --force MAJOR.MINOR.[$patch_number]
+        (rever) $ rever --activities authors --force MAJOR.MINOR.MINOR
 
         # changes were made to .authors.yml as per the prior bullet
         (rever) $ git diff --name-only HEAD HEAD~1
@@ -250,7 +253,7 @@ Currently, there are only 2 activities we use rever for, (1) aggregating the aut
     > * Add `win-arm64` as a known platform (subdir). (#11778)
     > ```
 
-    - You can utilize [GitHub's compare view][compare] to review what changes are to be included in this release. Make sure you compare the current release branch against the previous one (e.g., `24.5.x` would be compared against `24.3.x`)
+    - You can utilize [GitHub's compare view][compare] to review what changes are to be included in this release. Make sure you compare the current release branch against the previous one
 
     - Add a new news snippet for any PRs of importance that are missing.
 
@@ -310,8 +313,8 @@ Currently, there are only 2 activities we use rever for, (1) aggregating the aut
         + 86957814cf235879498ed7806029b8ff5f400034 Update .authors.yml
         + 3ec7491f2f58494a62f1491987d66f499f8113ad Update .mailmap
         + 432a9e1b41a3dec8f95a7556632f9a93fdf029fd Update news
-        + a5c0db938893d2c12cab12a1f7eb3e646ed80373 Update authorship for MAJOR.MINOR.[$patch_number]
-        + 5e95169d0df4bcdc2da9a6ba4a2561d90e49f75d Update CHANGELOG for MAJOR.MINOR.[$patch_number]
+        + a5c0db938893d2c12cab12a1f7eb3e646ed80373 Update authorship for MAJOR.MINOR.MINOR
+        + 5e95169d0df4bcdc2da9a6ba4a2561d90e49f75d Update CHANGELOG for MAJOR.MINOR.MINOR
         ```
 
 7. Since rever does not include stats on first-time contributors, we will need to add this manually.
@@ -332,18 +335,18 @@ Currently, there are only 2 activities we use rever for, (1) aggregating the aut
         + 86957814cf235879498ed7806029b8ff5f400034 Update .authors.yml
         + 3ec7491f2f58494a62f1491987d66f499f8113ad Update .mailmap
         + 432a9e1b41a3dec8f95a7556632f9a93fdf029fd Update news
-        + a5c0db938893d2c12cab12a1f7eb3e646ed80373 Update authorship for MAJOR.MINOR.[$patch_number]
-        + 5e95169d0df4bcdc2da9a6ba4a2561d90e49f75d Update CHANGELOG for MAJOR.MINOR.[$patch_number]
+        + a5c0db938893d2c12cab12a1f7eb3e646ed80373 Update authorship for MAJOR.MINOR.MINOR
+        + 5e95169d0df4bcdc2da9a6ba4a2561d90e49f75d Update CHANGELOG for MAJOR.MINOR.MINOR
         + 93fdf029fd4cf235872c12cab12a1f7e8f95a755 Add first-time contributions
         ```
 
 8. Push this versioned branch.
 
     ```bash
-    (rever) $ git push -u upstream changelog-MAJOR.MINOR.[$patch_number]
+    (rever) $ git push -u upstream changelog-MAJOR.MINOR.MINOR
     ```
 
-9. Open the Release PR targing the `MAJOR.MINOR.x` branch.
+9. Open the Release PR targeting the `MAJOR.MINOR.x` branch.
 
     <details>
     <summary>GitHub PR Template</summary>
@@ -367,7 +370,7 @@ Currently, there are only 2 activities we use rever for, (1) aggregating the aut
 
     | Field | Value |
     |---|---|
-    | Choose a tag | `MAJOR.MINOR.[$patch_number]` |
+    | Choose a tag | `MAJOR.MINOR.MINOR` |
     | Target | `MAJOR.MINOR.x` |
     | Body | copy/paste blurb from `CHANGELOG.md` |
 
@@ -405,7 +408,7 @@ To publish the release, go to the project's release page (e.g., https://github.c
 
 </details>
 
-## 9. Open PRs to bump [Anaconda Recipes][Anaconda Recipes] and [conda-forge][conda-forge] feedstocks to use `MAJOR.MINOR.[$patch_number]`.
+## 9. Open PRs to bump [Anaconda Recipes][Anaconda Recipes] and [conda-forge][conda-forge] feedstocks to use `MAJOR.MINOR.MINOR`.
 
 > [!NOTE]
 > Conda-forge's PRs will be auto-created via the `regro-cf-autotick-bot`. Follow the instructions below if any changes need to be made to the recipe that were not automatically added (these instructions are only necessary for anyone who is _not_ a conda-forge feedstock maintainer, since maintainers can push changes directly to the autotick branch):

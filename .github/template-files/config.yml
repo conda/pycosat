@@ -43,7 +43,10 @@ conda/infrastructure:
   - src: templates/releases/RELEASE.md
     dst: RELEASE.md
     with:
-      placeholder: MAJOR.MINOR
+      canary_channel: https://anaconda.org/conda-canary
+      # SemVer placeholders
+      placeholder: MAJOR.MINOR.MINOR
+      placeholder_x: MAJOR.MINOR.x
   - src: templates/releases/rever.xsh
     dst: rever.xsh
   - src: templates/releases/TEMPLATE
